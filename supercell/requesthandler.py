@@ -24,6 +24,7 @@ import logging
 import time
 
 from schematics.models import Model
+from schematics.exceptions import BaseError
 from tornado import gen, iostream
 from tornado.concurrent import is_future
 from tornado.escape import to_unicode
@@ -136,6 +137,8 @@ class RequestHandler(rq):
             except NoConsumerFound:
                 # TODO return available consumer types?!
                 raise HTTPError(406)
+            except BaseError as e:
+                raise HTTPError(400, reason=json.dumps(e.messages))
             except Exception as e:
                 raise HTTPError(400, reason=text_type(e))
 
