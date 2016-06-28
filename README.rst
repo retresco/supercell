@@ -11,22 +11,22 @@ serializations of the domain models.
 
 |TravisImage|_ |CoverAlls|_ |RequiresIo|_
 
-.. |TravisImage| image:: https://travis-ci.org/truemped/supercell.png?branch=master
-.. _TravisImage: https://travis-ci.org/truemped/supercell
+.. |TravisImage| image:: https://travis-ci.org/retresco/supercell.png?branch=master
+.. _TravisImage: https://travis-ci.org/retresco/supercell
 
-.. |CoverAlls| image:: https://coveralls.io/repos/truemped/supercell/badge.png?branch=master
-.. _CoverAlls: https://coveralls.io/r/truemped/supercell
+.. |CoverAlls| image:: https://coveralls.io/repos/retresco/supercell/badge.png?branch=master
+.. _CoverAlls: https://coveralls.io/r/retresco/supercell
 
-.. |RequiresIo| image:: https://requires.io/github/truemped/supercell/requirements.svg?branch=master
-.. _RequiresIo: https://requires.io/github/truemped/supercell/requirements/?branch=master
+.. |RequiresIo| image:: https://requires.io/github/retresco/supercell/requirements.svg?branch=master
+.. _RequiresIo: https://requires.io/github/retresco/supercell/requirements/?branch=master
 
 
 Quick Links
 ===========
 
 * `Documentation <http://supercell.rtfd.org>`_
-* `Source (Github) <http://github.com/truemped/supercell>`_
-* `Issues (Github) <http://github.com/truemped/supercell/issues>`_
+* `Source (Github) <http://github.com/retresco/supercell>`_
+* `Issues (Github) <http://github.com/retresco/supercell/issues>`_
 
 
 Authors
