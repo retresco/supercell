@@ -1,3 +1,9 @@
+0.7.1 - (February 3, 2017)
+-------------------------
+
+- schematics BaseError handling
+- changes necessary for moving truemped->retresco
+
 0.7.0 - (August 24, 2015)
 -------------------------
 
