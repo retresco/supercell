@@ -57,6 +57,7 @@ class SimpleModel(Model):
     doc_id = StringType(required=True)
     doc_bool = BooleanType(required=True)
 
+
 @provides(MediaType.TextHtml)
 @provides(MediaType.ApplicationJson, default=True)
 @consumes(MediaType.ApplicationJson, SimpleModel)
@@ -176,13 +177,13 @@ class ApplicationIntegrationTest(AsyncHTTPTestCase):
         response = self.fetch('/test-model', method='POST',
                               body='{"doc_id":"id", "doc_bool":"True"}',
                               headers={'Content-Type': 'application/json'})
-        self.eval_json(response, 400)
+        self.eval_json(response, 500)
 
         response = self.fetch('/test-model', method='POST',
                               body='{"doc_id":"id", "doc_bool":"True"}',
                               headers={'Accept': 'text/html',
                                        'Content-Type': 'application/json'})
-        self.eval_html(response, 400)
+        self.eval_html(response, 500)
 
     def test_that_individual_error_is_an_error(self):
         # supercell.mediatypes.Error
