@@ -18,12 +18,15 @@
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
+import json
 from collections import defaultdict
+from schematics.exceptions import ModelValidationError
+from tornado.web import HTTPError
+from tornado import escape
 
 from supercell._compat import with_metaclass
 from supercell.mediatypes import ContentType, MediaType
 from supercell.acceptparsing import parse_accept_header
-
 
 __all__ = ['NoProviderFound', 'ProviderBase', 'JsonProvider']
 
@@ -84,6 +87,8 @@ class ProviderBase(with_metaclass(ProviderMeta, object)):
         :param accept_header: HTTP Accept header value
         :type accept_header: str
         :param handler: supercell request handler
+        :param allow_default: allow usage of default provider if no accept header is set, default is False
+        :type allow_default: bool
         :raises: :exc:`NoProviderFound`
         """
         if not hasattr(handler, '_PROD_CONTENT_TYPES'):
@@ -108,7 +113,7 @@ class ProviderBase(with_metaclass(ProviderMeta, object)):
                 if len(known_types) == 1:
                     return known_types[0][1]
 
-        if 'default' in handler._PROD_CONTENT_TYPES:
+        if allow_default and 'default' in handler._PROD_CONTENT_TYPES:
             content_type = handler._PROD_CONTENT_TYPES['default']
             ctype = content_type.content_type
             default_type = [t for t in
@@ -129,6 +134,19 @@ class ProviderBase(with_metaclass(ProviderMeta, object)):
         """
         raise NotImplementedError
 
+    def error(self, status_code, message, handler):
+        """This method should return the correct representation of errors
+        that will be used as return value.
+
+        :param status_code: the HTTP status code to return
+        :type status_code: int
+        :param message: the error message to return
+        :type message: str
+        :param handler: the handler to write the return
+        :type handler: supercell.requesthandler.RequestHandler
+        """
+        raise NotImplementedError
+
 
 class JsonProvider(ProviderBase):
     """Default `application/json` provider."""
@@ -140,8 +158,28 @@ class JsonProvider(ProviderBase):
 
         .. seealso:: :py:mod:`supercell.api.provider.ProviderBase.provide`
         """
-        model.validate()
-        handler.write(model.to_primitive())
+        try:
+            model.validate()
+            handler.write(model.to_primitive())
+        except ModelValidationError as e:
+            # TODO: How to let know, that result model is concerned?
+            e.messages = {"result_model": e.messages}
+            raise HTTPError(500, reason=json.dumps(e.messages))
+
+    def error(self, status_code, message, handler):
+        """Simply return the json.
+
+        .. seealso:: :py:mod:`supercell.api.provider.ProviderBase.error`
+        """
+        try:
+            message = json.loads(message)
+        except ValueError:
+            pass
+
+        res = {"message": message,
+               "error": True}
+        handler.set_header('Content-Type', MediaType.ApplicationJson)
+        handler.finish(escape.json_encode(res))
 
 
 class TornadoTemplateProvider(ProviderBase):
@@ -153,5 +191,21 @@ class TornadoTemplateProvider(ProviderBase):
         """Render a template with the given model into HTML.
 
         By default we will use the tornado built in template language."""
-        model.validate()
-        handler.render(handler.get_template(model), **model.to_primitive())
+        try:
+            model.validate()
+            handler.render(handler.get_template(model), **model.to_primitive())
+        except ModelValidationError as e:
+            # TODO: How to let know, that result model is concerned?
+            e.messages = {"result_model": e.messages}
+            raise HTTPError(500, reason=json.dumps(e.messages))
+
+    def error(self, status_code, message, handler):
+        """ Return errors in html
+
+        .. seealso:: :py:mod:`supercell.api.provider.ProviderBase.error`
+        """
+        handler.finish("<html><title>%(code)d: %(message)s</title>"
+                       "<body>%(code)d: %(message)s</body></html>" % {
+                           "code": status_code,
+                           "message": message,
+                       })

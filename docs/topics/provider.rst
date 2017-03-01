@@ -28,7 +28,15 @@ A provider can be created equivalently to a consumer::
         CONTENT_TYPE = ContentType(MediaType.ApplicationJson)
 
         def provide(self, model, handler):
-            handler.write(model.validate())
+            try:
+                model.validate()
+                handler.write(model.to_primitive())
+            except ModelValidationError as e:
+                e.messages = {"result_model": e.messages}
+                raise HTTPError(500, reason=json.dumps(e.messages))
+
+        def error(self, status_code, message, handler):
+            handler.finish(message)
 
 
 For `Producers` the same remarks about the content type hold as for the
