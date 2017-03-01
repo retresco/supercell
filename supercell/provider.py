@@ -162,12 +162,11 @@ class JsonProvider(ProviderBase):
             model.validate()
             handler.write(model.to_primitive())
         except ModelValidationError as e:
-            # TODO: How to let know, that result model is concerned?
             e.messages = {"result_model": e.messages}
             raise HTTPError(500, reason=json.dumps(e.messages))
 
     def error(self, status_code, message, handler):
-        """Simply return the json.
+        """Simply return errors in  json.
 
         .. seealso:: :py:mod:`supercell.api.provider.ProviderBase.error`
         """
@@ -195,12 +194,11 @@ class TornadoTemplateProvider(ProviderBase):
             model.validate()
             handler.render(handler.get_template(model), **model.to_primitive())
         except ModelValidationError as e:
-            # TODO: How to let know, that result model is concerned?
             e.messages = {"result_model": e.messages}
             raise HTTPError(500, reason=json.dumps(e.messages))
 
     def error(self, status_code, message, handler):
-        """ Return errors in html
+        """Simply return errors in  html
 
         .. seealso:: :py:mod:`supercell.api.provider.ProviderBase.error`
         """

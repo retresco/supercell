@@ -118,14 +118,14 @@ class ApplicationIntegrationTest(AsyncHTTPTestCase):
         return service.get_app()
 
     def eval_json(self, response, code):
-        body = json.loads(response.body)
+        body = json.loads(response.body.decode('utf8'))
         self.assertIn('message', body)
         self.assertIn('error', body)
         self.assertEqual(code, response.code)
 
     def eval_html(self, response, code):
         self.assertEqual(code, response.code)
-        self.assertTrue(response.body.startswith('<html>'))
+        self.assertTrue(response.body.decode('utf8').startswith('<html>'))
         self.assertEqual(code, response.code)
 
     def test_that_returning_non_model_is_an_error(self):
