@@ -112,7 +112,7 @@ class RequestHandler(rq):
 
     def _request_summary(self):
         """Returns a summery of method, uri, caller ip and request id.
-        If request is forwarded by a proxy and X-Forwarded-From header is set,
+        If request is forwarded by a proxy and X-Forwarded-For header is set,
         the ip from this header is use as caller ip.
         The message is mainly used for log messages."""
         x_forward = self.request.headers.get('X-Forwarded-For', None)
