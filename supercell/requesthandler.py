@@ -111,9 +111,17 @@ class RequestHandler(rq):
         return self._request_id
 
     def _request_summary(self):
-        return self.request.method + " " + self.request.uri + \
-            " (ip:" + self.request.remote_ip + ", r_id:" + \
-            str(self.request_id) + ")"
+        """Returns a summery of method, uri, caller ip and request id.
+        If request is forwarded by a proxy and X-Forwarded-From header is set,
+        the ip from this header is use as caller ip.
+        The message is mainly used for log messages."""
+        x_forward = self.request.headers.get('X-Forwarded-For', None)
+        return '{method} {uri} (ip:{r_ip}, r_id:{r_id})'.format(
+            method=self.request.method,
+            uri=self.request.uri,
+            r_ip=x_forward or self.request.remote_ip,
+            r_id=str(self.request_id),
+        )
 
     def get_template(self, model):
         """Method to determine which template to use for rendering the html.
