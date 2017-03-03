@@ -136,7 +136,7 @@ class RequestHandler(rq):
                 kwargs['model'] = consumer.consume(self, model)
             except NoConsumerFound:
                 # TODO return available consumer types?!
-                raise HTTPError(406)
+                raise HTTPError(400, reason='Content-Type not supported.')
             except BaseError as e:
                 raise HTTPError(400, reason=json.dumps(e.messages))
             except Exception as e:
@@ -192,7 +192,11 @@ class RequestHandler(rq):
             if is_future(result):
                 result = yield result
             if result is not None:
-                raise TypeError("Expected None, got %r" % result)
+                # TODO: provide all results in this case or only errors?
+                if type(result) is ReturnInformationT:
+                    self._provide_result(verb, headers, result)
+                else:
+                    raise TypeError("Expected None, got %r" % result)
             if self._prepared_future is not None:
                 # Tell the Application we've finished with prepare()
                 # and are ready for the body to arrive.
@@ -257,3 +261,12 @@ class RequestHandler(rq):
 
         if not self._finished:
             self.finish()
+
+    def write_error(self, status_code, **kwargs):
+        try:
+            provider_class = ProviderBase.map_provider(
+                self.request.headers.get('Accept', ''), self,
+                allow_default=True)
+            provider_class().error(status_code, self._reason, self)
+        except NoProviderFound:
+            super(RequestHandler, self).write_error(status_code, **kwargs)
