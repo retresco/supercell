@@ -1,5 +1,12 @@
+0.7.2 - (March 17, 2017)
+------------------------
+
+- allow to log forwarded requests differently if X-Forwarded-For is set
+- improved error mechanism to be consistent in error writing
+- updated requirements to newer versions
+
 0.7.1 - (February 3, 2017)
--------------------------
+--------------------------
 
 - schematics BaseError handling
 - changes necessary for moving truemped->retresco
