@@ -22,6 +22,7 @@ from datetime import datetime
 import json
 import logging
 import time
+import inspect
 
 from schematics.models import Model
 from schematics.exceptions import BaseError
@@ -224,7 +225,7 @@ class RequestHandler(rq):
 
             method = getattr(self, self.request.method.lower())
             result = method(*self.path_args, **self.path_kwargs)
-            if is_future(result):
+            if is_future(result) or inspect.iscoroutinefunction(method):
                 result = yield result
             if result is not None:
                 self._provide_result(verb, headers, result)
