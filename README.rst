@@ -39,6 +39,7 @@ In order of contribution:
 * Tobias Guenther `@tobigue_ <http://twitter.com/tobigue_>`_
 * Matthias Rebel `@_rebeling <http://twitter.com/_rebeling>`_
 * Fabian Neumann `@hellp <http://twitter.com/hellp>`_
+* Michael Jurke `@mjrk <https://github.com/mjrk>`_
 
 
 License
