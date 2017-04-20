@@ -12,3 +12,5 @@ In the list of contributing to the codebase:
 - Matthias Rebel < matthias.rebel at retresco de >
 
 - Fabian Neumann < mail at fabianneumann de >
+
+- Michael Jurke < michael.jurke at retresco de >
