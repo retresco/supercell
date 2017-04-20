@@ -153,11 +153,14 @@ class ServiceTest(TestCase):
         if sys.version_info < (3,):
             expected.extend([mock.call(), mock.call().remove_handler(mock.ANY),
                              mock.call()._callbacks.__nonzero__(),
+                             mock.call()._callbacks.__nonzero__(),
                              mock.call().add_timeout(mock.ANY, mock.ANY)])
         else:
             expected.extend([mock.call(), mock.call().remove_handler(mock.ANY),
                              mock.call()._callbacks.__bool__(),
+                             mock.call()._callbacks.__bool__(),
                              mock.call().add_timeout(mock.ANY, mock.ANY)])
+
         assert expected == ioloop_instance_mock.mock_calls
 
     @mock.patch('tornado.ioloop.IOLoop.instance')

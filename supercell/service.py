@@ -133,7 +133,7 @@ class Service(object):
 
         def stop_loop():
             now = time.time()
-            if now < dl and (io_loop._callbacks or io_loop._timeouts):
+            if now < dl and self._has_callbacks(io_loop):
                 io_loop.add_timeout(now + 1, stop_loop)
             else:
                 io_loop.stop()
@@ -286,3 +286,16 @@ class Service(object):
         """Implement this method in order to add handlers and managed objects
         to the environment, before the app is started."""
         pass
+
+    def _has_callbacks(self, io_loop):
+        """Check if the io_loop has pending callbacks.
+
+        The check works with the default io_loop as well as the asyncio loop.
+        You may have to override it for other implemations.
+        """
+        if hasattr(tornado.platform, "asyncio") and isinstance(
+            io_loop, tornado.platform.asyncio.AsyncIOMainLoop
+        ):
+            return io_loop.asyncio_loop._scheduled
+        else:
+            return (io_loop._callbacks or io_loop._timeouts)
