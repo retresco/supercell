@@ -1,3 +1,8 @@
+0.7.3 - (April 21, 2017)
+------------------------
+
+- extend RequestHandler for async-await syntax compatibility
+
 0.7.2 - (March 17, 2017)
 ------------------------
 
