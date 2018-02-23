@@ -38,6 +38,9 @@ class MediaType(object):
     ApplicationJson = 'application/json'
     """Content type for `application/json`"""
 
+    ApplicationJsonPatch = 'application/json-patch+json'
+    """Content type for `application/json-patch+json`"""
+
     TextHtml = 'text/html'
     """Content type for `text/html`"""
 

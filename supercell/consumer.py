@@ -137,3 +137,10 @@ class JsonConsumer(ConsumerBase):
         """
         # TODO error if no request body is set
         return model(json.loads(handler.request.body.decode('utf8')))
+
+
+class JsonPatchConsumer(JsonConsumer):
+    """Default **application/json-patch+json** consumer."""
+
+    CONTENT_TYPE = ContentType(MediaType.ApplicationJsonPatch)
+    """The **application/json-patch+json** :class:`ContentType`."""
