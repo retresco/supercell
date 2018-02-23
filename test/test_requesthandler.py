@@ -86,7 +86,7 @@ class TestSimpleRequestHandler(AsyncHTTPTestCase):
         env = Environment()
         env.add_handler('/test', MyHandler)
         env.add_handler('/test_default', MyHandlerWithDefault)
-        env.add_handler('/test_post', MyEchoHandler)
+        env.add_handler('/test_echo', MyEchoHandler)
         return env.get_application()
 
     def get_new_ioloop(self):
@@ -118,7 +118,7 @@ class TestSimpleRequestHandler(AsyncHTTPTestCase):
         self.assertEqual(response.code, 406)
 
     def test_post_handler(self):
-        response = self.fetch('/test_post', method='POST',
+        response = self.fetch('/test_echo', method='POST',
                               headers={'Content-Type':
                                        s.MediaType.ApplicationJson},
                               body='{"message": "Simple message", "number": 1}'
@@ -128,14 +128,14 @@ class TestSimpleRequestHandler(AsyncHTTPTestCase):
             response.body.decode('utf8')), sort_keys=True))
 
     def test_post_handler_with_wrong_value_type(self):
-        response = self.fetch('/test_post', method='POST',
+        response = self.fetch('/test_echo', method='POST',
                               headers={'Content-Type':
                                        s.MediaType.ApplicationJson},
                               body='{"number": "one"}')
         self.assertEqual(response.code, 400)
 
     def test_delete(self):
-        response = self.fetch('/test_post', method='DELETE')
+        response = self.fetch('/test_echo', method='DELETE')
         self.assertEqual(response.code, 204)
 
 
