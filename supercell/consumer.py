@@ -124,7 +124,7 @@ class ConsumerBase(with_metaclass(ConsumerMeta, object)):
 
 
 class JsonConsumer(ConsumerBase):
-    """Default **application/json** provider."""
+    """Default **application/json** consumer."""
 
     CONTENT_TYPE = ContentType(MediaType.ApplicationJson)
     """The **application/json** :class:`ContentType`."""
