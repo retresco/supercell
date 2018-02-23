@@ -130,13 +130,13 @@ class RequestHandler(rq):
         raise NotImplementedError
 
     def _check_consumer(self):
-        """For a POST or PUT request check if we can find a matching
+        """For a PATCH, POST, or PUT request check if we can find a matching
         consumer for the incoming data."""
         verb = self.request.method.lower()
         headers = self.request.headers
         kwargs = self.path_kwargs
 
-        if verb in ['post', 'put'] and 'Content-Type' in headers:
+        if verb in ['patch', 'post', 'put'] and 'Content-Type' in headers:
             # try to find a matching consumer
             try:
                 (model, consumer_class) = ConsumerBase.map_consumer(
