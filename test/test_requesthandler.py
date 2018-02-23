@@ -76,6 +76,11 @@ class MyEchoHandler(RequestHandler):
         raise s.OkCreated({'docid': 123})
 
     @s.async
+    def patch(self, *args, **kwargs):
+        # do something with model
+        raise s.Ok()
+
+    @s.async
     def delete(self, *args, **kwargs):
         raise s.NoContent()
 
@@ -132,6 +137,24 @@ class TestSimpleRequestHandler(AsyncHTTPTestCase):
                               headers={'Content-Type':
                                        s.MediaType.ApplicationJson},
                               body='{"number": "one"}')
+        self.assertEqual(response.code, 400)
+
+    def test_patch_handler(self):
+        response = self.fetch('/test_echo', method='PATCH',
+                              headers={'Content-Type':
+                                       s.MediaType.ApplicationJson},
+                              body='{"number": 100}'
+                              )
+        self.assertEqual(response.code, 200)
+        self.assertEqual('{"ok": true}', json.dumps(json.loads(
+            response.body.decode('utf8')), sort_keys=True))
+
+    def test_patch_handler_with_wrong_value_type(self):
+        response = self.fetch('/test_echo', method='PATCH',
+                              headers={'Content-Type':
+                                       s.MediaType.ApplicationJson},
+                              body='{"number": one}'
+                              )
         self.assertEqual(response.code, 400)
 
     def test_delete(self):
