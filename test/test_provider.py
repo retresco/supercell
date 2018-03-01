@@ -49,8 +49,8 @@ class TestBasicProvider(TestCase):
         class MyHandler(RequestHandler):
             pass
 
-        provider = ProviderBase.map_provider(MediaType.ApplicationJson,
-                                             handler=MyHandler)
+        provider, _ = ProviderBase.map_provider(MediaType.ApplicationJson,
+                                                handler=MyHandler)
         self.assertIs(provider, JsonProvider)
 
         with self.assertRaises(NoProviderFound):
@@ -63,8 +63,8 @@ class TestBasicProvider(TestCase):
         class MyHandler(RequestHandler):
             pass
 
-        provider = ProviderBase.map_provider('application/vnd.supercell+json',
-                                             handler=MyHandler)
+        provider, _ = ProviderBase.map_provider('application/vnd.supercell+json',
+                                                handler=MyHandler)
         self.assertIs(provider, MoreDetailedJsonProvider)
 
     def test_json_provider_with_version(self):
@@ -77,11 +77,22 @@ class TestBasicProvider(TestCase):
                 # of this class
                 pass
 
-        provider = ProviderBase.map_provider(
+        provider, _ = ProviderBase.map_provider(
             'application/vnd.supercell-v1.0+json', handler=MyHandler)
         self.assertIs(provider, JsonProviderWithVendorAndVersion)
 
         handler = MyHandler()
-        provider = ProviderBase.map_provider(
+        provider, _ = ProviderBase.map_provider(
             'application/vnd.supercell-v1.0+json', handler=handler)
         self.assertIs(provider, JsonProviderWithVendorAndVersion)
+
+    def test_json_provider_with_configuration(self):
+
+        @provides(MediaType.ApplicationJson, partial=True)
+        class MyHandler(RequestHandler):
+            pass
+
+        provider, configuration = ProviderBase.map_provider(
+            MediaType.ApplicationJson, handler=MyHandler)
+        self.assertIs(provider, JsonProvider)
+        self.assertIs(configuration["partial"], True)

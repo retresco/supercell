@@ -266,3 +266,58 @@ class TestSimpleHtmlHandlerWithMissingTemplate(AsyncHTTPTestCase):
     def test_simple_html(self):
         response = self.fetch('/test_html/')
         self.assertEqual(500, response.code)
+
+
+class StricterMessage(Model):
+    doc_id = StringType(required=True)
+    message = StringType(required=True)
+    number = IntType()
+
+    class Options:
+        serialize_when_none = False
+
+
+class TestHandlerProvidingPartialModels(AsyncHTTPTestCase):
+
+    def get_app(self):
+
+        @provides(s.MediaType.ApplicationJson, partial=True)
+        class MyHandlerWithPartial(RequestHandler):
+
+            @s.async
+            def get(self, *args, **kwargs):
+                raise s.Return(StricterMessage({"doc_id": 'test123'}))
+
+        @provides(s.MediaType.ApplicationJson)
+        class MyHandlerWithoutPartial(RequestHandler):
+
+            @s.async
+            def get(self, *args, **kwargs):
+                raise s.Return(StricterMessage({"doc_id": 'test123'}))
+
+        env = Environment()
+        env.add_handler('/test_partial', MyHandlerWithPartial)
+        env.add_handler('/test_no_partial', MyHandlerWithoutPartial)
+        return env.get_application()
+
+    def get_new_ioloop(self):
+        return IOLoop.instance()
+
+    def test_provide_partial_model_with_partial_true(self):
+        response = self.fetch(
+            '/test_partial', headers={'Accept': s.MediaType.ApplicationJson})
+        self.assertEqual(response.code, 200)
+        self.assertEqual('{"doc_id": "test123"}',
+                         json.dumps(json.loads(response.body.decode('utf8')),
+                                    sort_keys=True))
+
+    def test_provide_partial_model_with_partial_false(self):
+        response = self.fetch(
+            '/test_no_partial',
+            headers={'Accept': s.MediaType.ApplicationJson})
+        self.assertEqual(response.code, 500)
+        self.assertEqual(
+            '{"error": true, "message": {"result_model": ' +
+            '{"message": ["This field is required."]}}}',
+            json.dumps(json.loads(response.body.decode('utf8')),
+                       sort_keys=True))

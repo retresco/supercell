@@ -26,7 +26,8 @@ from collections import defaultdict
 from supercell.mediatypes import ContentType
 
 
-def provides(content_type, vendor=None, version=None, default=False):
+def provides(content_type, vendor=None, version=None, default=False,
+             partial=False):
     """Class decorator for mapping HTTP GET responses to content types and
     their representation.
 
@@ -51,6 +52,9 @@ def provides(content_type, vendor=None, version=None, default=False):
     :param float version: The vendor version
     :param bool default: If **True** and no **Accept** header is present, this
                          content type is provided
+    :param bool partial: If **True**, the provider can return partial
+                         representations, i.e. the underlying model validates
+                         even though required fields are missing.
     """
 
     def wrapper(cls):
@@ -60,14 +64,18 @@ def provides(content_type, vendor=None, version=None, default=False):
 
         if not hasattr(cls, '_PROD_CONTENT_TYPES'):
             cls._PROD_CONTENT_TYPES = defaultdict(list)
+        if not hasattr(cls, '_PROD_CONFIGURATION'):
+            cls._PROD_CONFIGURATION = defaultdict(dict)
 
         ctype = ContentType(content_type,
                             vendor,
                             version)
         cls._PROD_CONTENT_TYPES[content_type].append(ctype)
+        cls._PROD_CONFIGURATION[content_type]['partial'] = partial
         if default:
             assert 'default' not in cls._PROD_CONTENT_TYPES, 'TODO: nice msg'
             cls._PROD_CONTENT_TYPES['default'] = ctype
+            cls._PROD_CONFIGURATION['default']['partial'] = partial
 
         return cls
 

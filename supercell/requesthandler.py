@@ -259,21 +259,21 @@ class RequestHandler(rq):
 
         else:
             try:
-                provider_class = ProviderBase.map_provider(
+                provider_class, provider_config = ProviderBase.map_provider(
                     headers.get('Accept', ''), self, allow_default=True)
             except NoProviderFound:
                 raise HTTPError(406)
 
             provider = provider_class()
             if isinstance(result, Model):
-                provider.provide(result, self)
+                provider.provide(result, self, **provider_config)
 
         if not self._finished:
             self.finish()
 
     def write_error(self, status_code, **kwargs):
         try:
-            provider_class = ProviderBase.map_provider(
+            provider_class, _ = ProviderBase.map_provider(
                 self.request.headers.get('Accept', ''), self,
                 allow_default=True)
             provider_class().error(status_code, self._reason, self)

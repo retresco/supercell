@@ -91,6 +91,10 @@ class ProviderBase(with_metaclass(ProviderMeta, object)):
                               header is set, default is False
         :type allow_default: bool
         :raises: :exc:`NoProviderFound`
+
+        :return: A tuple of the matching provider implementation class and
+                 the provide()-kwargs
+        :rtype: (supercell.api.provider.ProviderBase, dict)
         """
         if not hasattr(handler, '_PROD_CONTENT_TYPES'):
             raise NoProviderFound()
@@ -111,22 +115,24 @@ class ProviderBase(with_metaclass(ProviderMeta, object)):
                                ProviderMeta.KNOWN_CONTENT_TYPES[ctype]
                                if t[0] == c]
 
+                configuration = handler._PROD_CONFIGURATION[ctype]
                 if len(known_types) == 1:
-                    return known_types[0][1]
+                    return (known_types[0][1], configuration)
 
         if allow_default and 'default' in handler._PROD_CONTENT_TYPES:
             content_type = handler._PROD_CONTENT_TYPES['default']
+            configuration = handler._PROD_CONFIGURATION['default']
             ctype = content_type.content_type
             default_type = [t for t in
                             ProviderMeta.KNOWN_CONTENT_TYPES[ctype]
                             if t[0] == content_type]
 
             if len(default_type) == 1:
-                return default_type[0][1]
+                return (default_type[0][1], configuration)
 
         raise NoProviderFound()
 
-    def provide(self, model, handler):
+    def provide(self, model, handler, **kwargs):
         """This method should return the correct representation as a simple
         string (i.e. byte buffer) that will be used as return value.
 
@@ -156,13 +162,18 @@ class JsonProvider(ProviderBase):
 
     CONTENT_TYPE = ContentType(MediaType.ApplicationJson)
 
-    def provide(self, model, handler):
+    def provide(self, model, handler, **kwargs):
         """Simply return the json via `json.dumps`.
+
+        Keyword arguments:
+        :param partial: if **True** the model will be validate as a partial.
+        :type partial: bool
 
         .. seealso:: :py:mod:`supercell.api.provider.ProviderBase.provide`
         """
         try:
-            model.validate()
+            partial = kwargs.get("partial", False)
+            model.validate(partial=partial)
             handler.write(model.to_primitive())
         except ModelValidationError as e:
             e.messages = {"result_model": e.messages}
@@ -189,7 +200,7 @@ class TornadoTemplateProvider(ProviderBase):
 
     CONTENT_TYPE = ContentType(MediaType.TextHtml)
 
-    def provide(self, model, handler):
+    def provide(self, model, handler, **kwargs):
         """Render a template with the given model into HTML.
 
         By default we will use the tornado built in template language."""
