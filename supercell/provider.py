@@ -87,7 +87,8 @@ class ProviderBase(with_metaclass(ProviderMeta, object)):
         :param accept_header: HTTP Accept header value
         :type accept_header: str
         :param handler: supercell request handler
-        :param allow_default: allow usage of default provider if no accept header is set, default is False
+        :param allow_default: allow usage of default provider if no accept
+                              header is set, default is False
         :type allow_default: bool
         :raises: :exc:`NoProviderFound`
         """
@@ -131,6 +132,8 @@ class ProviderBase(with_metaclass(ProviderMeta, object)):
 
         :param model: the model to convert to a certain content type
         :type model: supercell.schematics.Model
+        :param handler: the handler to write the return
+        :type handler: supercell.requesthandler.RequestHandler
         """
         raise NotImplementedError
 
