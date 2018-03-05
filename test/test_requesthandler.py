@@ -18,12 +18,17 @@
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
+import pytest
+
 import json
 import os.path as op
 
+import schematics
 from schematics.models import Model
 from schematics.types import StringType
 from schematics.types import IntType
+from schematics.types.compound import ModelType
+from schematics.types.compound import ListType
 
 from tornado.ioloop import IOLoop
 from tornado.testing import AsyncHTTPTestCase
@@ -277,16 +282,13 @@ class StricterMessage(Model):
         serialize_when_none = False
 
 
+class StricterMessageCollection(Model):
+    messages = ListType(ModelType(StricterMessage))
+
+
 class TestHandlerProvidingPartialModels(AsyncHTTPTestCase):
 
     def get_app(self):
-
-        @provides(s.MediaType.ApplicationJson, partial=True)
-        class MyHandlerWithPartial(RequestHandler):
-
-            @s.async
-            def get(self, *args, **kwargs):
-                raise s.Return(StricterMessage({"doc_id": 'test123'}))
 
         @provides(s.MediaType.ApplicationJson)
         class MyHandlerWithoutPartial(RequestHandler):
@@ -295,21 +297,29 @@ class TestHandlerProvidingPartialModels(AsyncHTTPTestCase):
             def get(self, *args, **kwargs):
                 raise s.Return(StricterMessage({"doc_id": 'test123'}))
 
+        @provides(s.MediaType.ApplicationJson, partial=True)
+        class MyHandlerWithPartial(RequestHandler):
+
+            @s.async
+            def get(self, *args, **kwargs):
+                raise s.Return(StricterMessage({"doc_id": 'test123'}))
+
+        @provides(s.MediaType.ApplicationJson, partial=True)
+        class MyHandlerWithPartialComplex(RequestHandler):
+
+            @s.async
+            def get(self, *args, **kwargs):
+                raise s.Return(StricterMessageCollection(
+                    {"messages": [{"doc_id": 'test123'}]}))
+
         env = Environment()
-        env.add_handler('/test_partial', MyHandlerWithPartial)
         env.add_handler('/test_no_partial', MyHandlerWithoutPartial)
+        env.add_handler('/test_partial', MyHandlerWithPartial)
+        env.add_handler('/test_partial_complex', MyHandlerWithPartialComplex)
         return env.get_application()
 
     def get_new_ioloop(self):
         return IOLoop.instance()
-
-    def test_provide_partial_model_with_partial_true(self):
-        response = self.fetch(
-            '/test_partial', headers={'Accept': s.MediaType.ApplicationJson})
-        self.assertEqual(response.code, 200)
-        self.assertEqual('{"doc_id": "test123"}',
-                         json.dumps(json.loads(response.body.decode('utf8')),
-                                    sort_keys=True))
 
     def test_provide_partial_model_with_partial_false(self):
         response = self.fetch(
@@ -321,3 +331,25 @@ class TestHandlerProvidingPartialModels(AsyncHTTPTestCase):
             '{"message": ["This field is required."]}}}',
             json.dumps(json.loads(response.body.decode('utf8')),
                        sort_keys=True))
+
+    def test_provide_partial_model_with_partial_true(self):
+        response = self.fetch(
+            '/test_partial',
+            headers={'Accept': s.MediaType.ApplicationJson})
+        self.assertEqual(response.code, 200)
+        self.assertEqual('{"doc_id": "test123"}',
+                         json.dumps(json.loads(response.body.decode('utf8')),
+                                    sort_keys=True))
+
+    @pytest.mark.skipif(
+        schematics.__version__ < "2.0.1",
+        reason="Partial validation of complex models is broken in schematics" +
+               " version < 2.0.1.")
+    def test_provide_partial_model_with_complex_partial_true(self):
+        response = self.fetch(
+            '/test_partial_complex',
+            headers={'Accept': s.MediaType.ApplicationJson})
+        self.assertEqual(response.code, 200)
+        self.assertEqual('{"messages": [{"doc_id": "test123"}]}',
+                         json.dumps(json.loads(response.body.decode('utf8')),
+                                    sort_keys=True))
