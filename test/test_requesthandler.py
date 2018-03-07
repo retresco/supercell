@@ -27,8 +27,8 @@ import schematics
 from schematics.models import Model
 from schematics.types import StringType
 from schematics.types import IntType
-from schematics.types.compound import ModelType
 from schematics.types.compound import ListType
+from schematics.types.compound import ModelType
 
 from tornado.ioloop import IOLoop
 from tornado.testing import AsyncHTTPTestCase
@@ -353,3 +353,61 @@ class TestHandlerProvidingPartialModels(AsyncHTTPTestCase):
         self.assertEqual('{"messages": [{"doc_id": "test123"}]}',
                          json.dumps(json.loads(response.body.decode('utf8')),
                                     sort_keys=True))
+
+
+class SimpleModel(Model):
+    name = StringType()
+    numbers = ListType(IntType())
+
+    class Options:
+        serialize_when_none = False
+
+
+class TestLoadModelFromArguments(AsyncHTTPTestCase):
+
+    def get_app(self):
+
+        @provides(s.MediaType.ApplicationJson, default=True)
+        class MyHandler(RequestHandler):
+
+            @s.async
+            def get(self, *args, **kwargs):
+                model = self.load_model_from_arguments(
+                    SimpleModel, name="default")
+                raise s.Return(model)
+
+        env = Environment()
+        env.add_handler('/test', MyHandler)
+        return env.get_application()
+
+    def test_load_model_default_is_used(self):
+        response = self.fetch(
+            '/test',
+            headers={'Accept': s.MediaType.ApplicationJson})
+        self.assertEqual(response.code, 200)
+        body = json.loads(response.body.decode('utf8'))
+        self.assertEqual(body, {"name": "default"})
+
+    def test_load_model_default_is_overwritten(self):
+        response = self.fetch(
+            '/test?name=Peter',
+            headers={'Accept': s.MediaType.ApplicationJson})
+        self.assertEqual(response.code, 200)
+        body = json.loads(response.body.decode('utf8'))
+        self.assertEqual(body, {"name": "Peter"})
+
+    def test_load_model_list_type_single_entries(self):
+        response = self.fetch(
+            '/test?name=Peter&numbers=1',
+            headers={'Accept': s.MediaType.ApplicationJson})
+        self.assertEqual(response.code, 200)
+        body = json.loads(response.body.decode('utf8'))
+        self.assertEqual(body, {"name": "Peter", "numbers": [1]})
+
+    def test_load_model_list_type_multiple_entries(self):
+        response = self.fetch(
+            '/test?name=Peter&numbers=1&numbers=2&numbers=3',
+            headers={'Accept': s.MediaType.ApplicationJson})
+        self.assertEqual(response.code, 200)
+        body = json.loads(response.body.decode('utf8'))
+        self.assertEqual(body, {"name": "Peter", "numbers": [1, 2, 3]})

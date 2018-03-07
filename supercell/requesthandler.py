@@ -25,6 +25,7 @@ import time
 import inspect
 
 from schematics.models import Model
+from schematics.types.compound import ListType
 from schematics.exceptions import BaseError
 from tornado import gen, iostream
 from tornado.concurrent import is_future
@@ -279,3 +280,39 @@ class RequestHandler(rq):
             provider_class().error(status_code, self._reason, self)
         except NoProviderFound:
             super(RequestHandler, self).write_error(status_code, **kwargs)
+
+    def load_model_from_arguments(self, model_cls, validate=True, **kwargs):
+        """
+        Convenience method for instantiating a model from the request's url
+        query arguments. Supports ListType model fields for multi parameters.
+        Kwargs can specify defaults for fields not provided in the request.
+
+        :param model_cls: A model class (instance of schematics.models.Model).
+        :param validate : Allows to switch off validation (default is True).
+        :param kwargs   : Optional arguments that are used as default if there
+                          is no adequate parameter in request.
+
+        :return: A model instance.
+        """
+        assert issubclass(model_cls, Model)
+
+        raw_data = dict(kwargs)
+        fields = model_cls._fields  # noqa
+
+        arguments = {
+            key: self.get_arguments(key)
+            for key in self.request.query_arguments
+        }
+
+        raw_data.update({
+            key: (
+                values
+                if isinstance(fields.get(key, None), ListType)
+                else values[0]
+            )
+            for key, values in arguments.items() if values
+        })
+        model = model_cls(raw_data)
+        if validate:
+            model.validate()
+        return model
