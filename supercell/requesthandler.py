@@ -71,12 +71,12 @@ class RequestHandler(rq):
 
     @property
     def environment(self):
-        """Convinience method for accessing the environment."""
+        """Convenience method for accessing the environment."""
         return self.application.environment
 
     @property
     def config(self):
-        """Convinience method for accessing the configuration."""
+        """Convenience method for accessing the configuration."""
         return self.application.config
 
     @property
