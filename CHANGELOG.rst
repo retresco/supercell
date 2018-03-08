@@ -1,9 +1,18 @@
+0.8.0 - (March 8, 2018)
+-----------------------
+
+- new load model from arguments helper for request handlers
+- provides decorator with new partial option for partial validation
+- added support for partial validation in case of JsonProvider
+- NOTE: with schematics < 2.0.1, ModelType isn't properly partially validated
+- added python3.6 travis integration
+- removed python2.6 support
+
 0.7.4 - (March 8, 2018)
 -----------------------
 
 - add patch to http verbs that consume models
 - add Content-Type and Consumer for json patches
-
 
 0.7.3 - (April 21, 2017)
 ------------------------
