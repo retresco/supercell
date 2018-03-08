@@ -171,3 +171,19 @@ class TestProvidesDecorator(TestCase):
                          MediaType.ApplicationJson)
         self.assertIsNone(content_type.vendor)
         self.assertIsNone(content_type.version)
+
+    def test_provides_decorator_with_partial(self):
+
+        @provides(MediaType.ApplicationJson, partial=True)
+        class MyHandler(RequestHandler):
+
+            def update_stuff(self):
+                pass
+
+        self.assertTrue(hasattr(MyHandler, '_PROD_CONFIGURATION'))
+        self.assertEqual(len(MyHandler._PROD_CONFIGURATION), 1)
+        self.assertTrue(MediaType.ApplicationJson in
+                        MyHandler._PROD_CONFIGURATION)
+        configuration = MyHandler._PROD_CONFIGURATION[
+            MediaType.ApplicationJson]
+        self.assertIs(configuration["partial"], True)
