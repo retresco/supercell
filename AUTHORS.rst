@@ -14,3 +14,7 @@ In the list of contributing to the codebase:
 - Fabian Neumann < mail at fabianneumann de >
 
 - Michael Jurke < michael.jurke at retresco de >
+
+- Steffen Becker < steffen.becker at retresco de >
+
+- Andreas Peldszus < andreas.peldszus at retresco de >
