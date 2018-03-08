@@ -1,3 +1,10 @@
+0.7.4 - (March 8, 2018)
+-----------------------
+
+- add patch to http verbs that consume models
+- add Content-Type and Consumer for json patches
+
+
 0.7.3 - (April 21, 2017)
 ------------------------
 
