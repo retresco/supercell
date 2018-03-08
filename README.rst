@@ -40,8 +40,8 @@ In order of contribution:
 * Matthias Rebel `@_rebeling <http://twitter.com/_rebeling>`_
 * Fabian Neumann `@hellp <http://twitter.com/hellp>`_
 * Michael Jurke `@mjrk <https://github.com/mjrk>`_
-* Steffen Becker `@exorbit <https://github.com/exorbit>`
-* Andreas Peldszus `@peldszus <https://github.com/peldszus>`
+* Steffen Becker `@exorbit <https://github.com/exorbit>`_
+* Andreas Peldszus `@peldszus <https://github.com/peldszus>`_
 
 
 License
