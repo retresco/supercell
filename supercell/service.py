@@ -48,6 +48,8 @@ define('logfile', default='root-%(pid)s.log',
 
 define('loglevel', default='INFO', help='Log level')
 
+define('loglevel_health_check', default='INFO',
+       help='Set the log level of the health check access logging.')
 
 define('port', default=8080, help='Port to listen on')
 
