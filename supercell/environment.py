@@ -37,7 +37,6 @@ from greplin import scales
 from greplin.scales import util
 
 from tornado.gen import coroutine as async
-from tornado.log import access_log
 from tornado.options import options
 from tornado.web import Application as _TAPP
 
@@ -62,52 +61,18 @@ class Application(_TAPP):
         """
         self.environment = environment
         self.config = config
-        self._log_method_health_check = None
         super(Application, self).__init__(*args, **kwargs)
 
-    @property
-    def log_method_health_check(self):
-        """
-        logging method to use for health check non-error logging. Log-level
-        can ben configured with the command line option loglevel_health_check
-        """
-        if self._log_method_health_check is None:
-            try:
-                self._log_method_health_check = getattr(
-                    access_log, options['loglevel_health_check'].lower()
-                )
-            except AttributeError:
-                self._log_method_health_check = access_log.info
-        return self._log_method_health_check
-
     def log_request(self, handler):
-        """Writes a completed HTTP request to the logs.
-
-        By default writes to the python root logger.  To change
-        this behavior either subclass Application and override this method,
-        or pass a function in the application settings dictionary as
-        ``log_function``.
-
-        This method is almost identical to the implementation in
-        tornado.web.Application, but a different log function
-        (self.log_method_health_check) is used for non-error logging
-        of SystemHealthCheck handlers.
         """
-        if "log_function" in self.settings:
-            self.settings["log_function"](handler)
+        suppress non-error logs for system health check handlers in case
+        the command-line parameter --suppress_health_check_log has been set.
+        """
+        if options['suppress_health_check_log'] and \
+                isinstance(handler, SystemHealthCheck) and \
+                handler.get_status() < 400:
             return
-        if handler.get_status() < 400:
-            if isinstance(handler, SystemHealthCheck):
-                log_method = self.log_method_health_check
-            else:
-                log_method = access_log.info
-        elif handler.get_status() < 500:
-            log_method = access_log.warning
-        else:
-            log_method = access_log.error
-        request_time = 1000.0 * handler.request.request_time()
-        log_method("%d %s %.2fms", handler.get_status(),
-                   handler._request_summary(), request_time)
+        super(Application, self).log_request(handler)
 
 
 class Environment(object):
