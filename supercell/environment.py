@@ -67,7 +67,8 @@ class Application(_TAPP):
         suppress non-error logs for system health check handlers in case
         the command-line parameter --suppress_health_check_log has been set.
         """
-        if self.config.suppress_health_check_log and \
+        if self.config is not None and \
+                self.config.suppress_health_check_log and \
                 isinstance(handler, SystemHealthCheck) and \
                 handler.get_status() < 400:
             return
