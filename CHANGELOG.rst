@@ -1,3 +1,8 @@
+0.8.1 - (May 2, 2018)
+---------------------
+
+- added option to suppress (successful) health check logs in an application
+
 0.8.0 - (March 8, 2018)
 -----------------------
 
