@@ -37,7 +37,6 @@ from greplin import scales
 from greplin.scales import util
 
 from tornado.gen import coroutine as async
-from tornado.options import options
 from tornado.web import Application as _TAPP
 
 from supercell.cache import CacheConfigT
@@ -68,7 +67,7 @@ class Application(_TAPP):
         suppress non-error logs for system health check handlers in case
         the command-line parameter --suppress_health_check_log has been set.
         """
-        if options['suppress_health_check_log'] and \
+        if self.config.suppress_health_check_log and \
                 isinstance(handler, SystemHealthCheck) and \
                 handler.get_status() < 400:
             return
