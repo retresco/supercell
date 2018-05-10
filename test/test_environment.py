@@ -24,6 +24,7 @@ if sys.version_info > (2, 7):
 else:
     from unittest2 import TestCase
 
+from tornado import httputil
 from tornado.web import Application, RequestHandler
 
 from supercell.environment import Environment
@@ -35,7 +36,7 @@ class EnvironmentTest(TestCase):
         env = Environment()
         app = env.get_application()
         self.assertIsInstance(app, Application)
-        self.assertEqual(len(app.handlers), 2)
+        self.assertEqual(len(app.default_router.rules), 3)
 
     def test_config_file_paths(self):
         env = Environment()
@@ -54,13 +55,11 @@ class EnvironmentTest(TestCase):
         self.assertEqual(len(env._handlers), 1)
 
         app = env.get_application()
-        self.assertEqual(len(app.handlers), 3)
-        (host_pattern, [spec]) = [h for h in app.handlers
-                                  if not h[1][0].regex.pattern.startswith(
-                                      '/_system')][0]
-        self.assertEqual(host_pattern.pattern, '.*$')
-        self.assertEqual(spec.regex.pattern, '/test$')
-        self.assertEqual(spec.handler_class, MyHandler)
+
+        request = httputil.HTTPServerRequest(uri='/test')
+        handler_delegate = app.default_router.find_handler(request)
+        self.assertIsNotNone(handler_delegate)
+        self.assertEqual(handler_delegate.handler_class, MyHandler)
 
     def test_managed_object_access(self):
         env = Environment()
