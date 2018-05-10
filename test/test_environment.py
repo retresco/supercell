@@ -21,9 +21,12 @@ from __future__ import (absolute_import, division, print_function,
 import sys
 if sys.version_info > (2, 7):
     from unittest import TestCase
+    from unittest import skipIf
 else:
     from unittest2 import TestCase
+    from unittest2 import skipIf
 
+import tornado
 from tornado import httputil
 from tornado.web import Application, RequestHandler
 
@@ -36,12 +39,16 @@ class EnvironmentTest(TestCase):
         env = Environment()
         app = env.get_application()
         self.assertIsInstance(app, Application)
-        self.assertEqual(len(app.default_router.rules), 3)
+        if tornado.version < '4.5':
+            self.assertEqual(len(app.handlers), 2)
+        else:
+            self.assertEqual(len(app.default_router.rules), 3)
 
     def test_config_file_paths(self):
         env = Environment()
         self.assertEqual(len(env.config_file_paths), 0)
 
+    @skipIf(tornado.version < '4.5', 'test requires tornado.routing')
     def test_add_handler(self):
         env = Environment()
         self.assertEqual(len(env._handlers), 0)
