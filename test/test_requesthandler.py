@@ -30,7 +30,6 @@ from schematics.types import IntType
 from schematics.types.compound import ListType
 from schematics.types.compound import ModelType
 
-from tornado.ioloop import IOLoop
 from tornado.testing import AsyncHTTPTestCase
 
 import supercell.api as s
@@ -98,9 +97,6 @@ class TestSimpleRequestHandler(AsyncHTTPTestCase):
         env.add_handler('/test_default', MyHandlerWithDefault)
         env.add_handler('/test_echo', MyEchoHandler)
         return env.get_application()
-
-    def get_new_ioloop(self):
-        return IOLoop.instance()
 
     def test_simple_handler(self):
         response = self.fetch('/test', headers={'Accept':
@@ -187,9 +183,6 @@ class TestUrlEncoding(AsyncHTTPTestCase):
         env.add_handler('/testencoding/(.*)', EncodingTestingHandler)
         return env.get_application()
 
-    def get_new_ioloop(self):
-        return IOLoop.instance()
-
     def test_latinone_handler(self):
         response = self.fetch('/testencoding/alfredo-p%e9rez-rubalcaba')
         self.assertEqual(200, response.code)
@@ -232,9 +225,6 @@ class TestSimpleHtmlHandler(AsyncHTTPTestCase):
                                                         'html_test_template')
         return env.get_application()
 
-    def get_new_ioloop(self):
-        return IOLoop.instance()
-
     def test_simple_html(self):
         response = self.fetch('/test_html/')
         self.assertEqual(200, response.code)
@@ -264,9 +254,6 @@ class TestSimpleHtmlHandlerWithMissingTemplate(AsyncHTTPTestCase):
         env.tornado_settings['template_path'] = op.join(d,
                                                         'html_test_template')
         return env.get_application()
-
-    def get_new_ioloop(self):
-        return IOLoop.instance()
 
     def test_simple_html(self):
         response = self.fetch('/test_html/')
@@ -317,9 +304,6 @@ class TestHandlerProvidingPartialModels(AsyncHTTPTestCase):
         env.add_handler('/test_partial', MyHandlerWithPartial)
         env.add_handler('/test_partial_complex', MyHandlerWithPartialComplex)
         return env.get_application()
-
-    def get_new_ioloop(self):
-        return IOLoop.instance()
 
     def test_provide_partial_model_with_partial_false(self):
         response = self.fetch(
