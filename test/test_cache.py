@@ -22,7 +22,6 @@ from schematics.models import Model
 from schematics.types import StringType
 
 from tornado import gen
-from tornado.ioloop import IOLoop
 from tornado.testing import AsyncHTTPTestCase
 
 import supercell.api as s
@@ -93,9 +92,6 @@ class CachingWithoutDecorator(RequestHandler):
 
 
 class TestCacheDecorator(AsyncHTTPTestCase):
-
-    def get_new_ioloop(self):
-        return IOLoop.instance()
 
     def get_app(self):
         env = Environment()

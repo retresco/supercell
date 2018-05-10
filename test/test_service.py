@@ -32,7 +32,7 @@ import pytest
 from schematics.models import Model
 from schematics.types import StringType
 import tornado.options
-from supercell.testing import AsyncHTTPTestCase
+from tornado.testing import AsyncHTTPTestCase
 
 import supercell.api as s
 from supercell.environment import Environment
@@ -110,17 +110,18 @@ class ServiceTest(TestCase):
 
         service.initialize_logging()
 
-    @mock.patch('tornado.ioloop.IOLoop.instance')
+    @mock.patch('tornado.ioloop.IOLoop.current')
     def test_main_method(self, ioloop_instance_mock):
         service = MyService()
         service.main()
 
-        expected = [mock.call(), mock.call().add_handler(mock.ANY, mock.ANY,
-                                                         mock.ANY),
-                    mock.call(), mock.call().start()]
-        assert expected == ioloop_instance_mock.mock_calls
+        ioloop_instance_mock.assert_called()
+        ioloop_instance_mock().start.assert_called()
+        ioloop_instance_mock().add_handler.assert_called()
+        service.shutdown()
 
-    @mock.patch('tornado.ioloop.IOLoop.instance')
+
+    @mock.patch('tornado.ioloop.IOLoop.current')
     @mock.patch('socket.fromfd')
     def test_startup_with_socket_fd(self, socket_fromfd_mock,
                                     ioloop_instance_mock):
@@ -137,8 +138,10 @@ class ServiceTest(TestCase):
 
         assert (mock.call(123, socket.AF_INET, socket.SOCK_STREAM)
                 in socket_fromfd_mock.mock_calls)
+        service.shutdown()
 
-    @mock.patch('tornado.ioloop.IOLoop.instance')
+
+    @mock.patch('tornado.ioloop.IOLoop.current')
     def test_graceful_shutdown_pending_callbacks(self, ioloop_instance_mock):
         service = MyService()
         service.main()
@@ -163,7 +166,7 @@ class ServiceTest(TestCase):
 
         assert expected == ioloop_instance_mock.mock_calls
 
-    @mock.patch('tornado.ioloop.IOLoop.instance')
+    @mock.patch('tornado.ioloop.IOLoop.current')
     def test_graceful_final_shutdown(self, ioloop_instance_mock):
         service = MyService()
         service.main()
@@ -181,12 +184,19 @@ class ServiceTest(TestCase):
         assert expected == ioloop_instance_mock.mock_calls
 
         service.config.max_grace_seconds = 3
+        service.shutdown()
 
 
 class ApplicationIntegrationTest(AsyncHTTPTestCase):
 
-    ARGV = []
-    SERVICE = MyService
+    @pytest.fixture(autouse=True)
+    def set_commandline(self, monkeypatch):
+        monkeypatch.setattr(sys, 'argv', ['pytest'])
+
+    def get_app(self):
+        service = MyService()
+        service.initialize_logging()
+        return service.get_app()
 
     def test_simple_get(self):
         response = self.fetch('/test', headers={'Accept':
