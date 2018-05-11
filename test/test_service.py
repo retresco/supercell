@@ -207,3 +207,15 @@ class ApplicationIntegrationTest(AsyncHTTPTestCase):
     def test_get_with_exception(self):
         response = self.fetch('/exception')
         self.assertEqual(500, response.code)
+
+
+@pytest.mark.parametrize('option_name', [
+    '--show_config',
+    '--show_config_name',
+    '--show_config_file_order'
+])
+def test_system_exit_after_showing_config(option_name):
+    with mock.patch('sys.argv', ['', option_name]):
+        service = s.Service()
+        with pytest.raises(SystemExit):
+            service.get_app()
