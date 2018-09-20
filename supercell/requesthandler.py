@@ -151,9 +151,7 @@ class RequestHandler(rq):
                 # TODO return available consumer types?!
                 raise HTTPError(400, reason='Content-Type not supported.')
             except BaseError as e:
-                raise HTTPError(400, reason=json.dumps({
-                    key: str(value) for key, value in e.messages.items()
-                }))
+                raise HTTPError(400, reason=json.dumps(e.messages))
             except Exception as e:
                 raise HTTPError(400, reason=text_type(e))
 
