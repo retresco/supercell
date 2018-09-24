@@ -208,14 +208,14 @@ class Service(object):
         can be overwritten by the command line and/or environment variables.
 
         precedence:
-            environment variables > command line arguments > config file
+            command line arguments > environment variables > config file
         """
         if not hasattr(self, '_config'):
             # parse config files and command line arguments
             self.parse_config_files()
-            self.parse_command_line()
             from tornado.options import options
             self.parse_environment_variables(options)
+            self.parse_command_line()
             self._config = options
         return self._config
 
