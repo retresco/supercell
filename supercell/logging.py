@@ -18,8 +18,10 @@
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
+import logging
 from logging.handlers import TimedRotatingFileHandler
 import os
+import socket
 
 
 class SupercellLoggingHandler(TimedRotatingFileHandler):
@@ -31,3 +33,13 @@ class SupercellLoggingHandler(TimedRotatingFileHandler):
         logfile = logfile % {'pid': os.getpid()}
         TimedRotatingFileHandler.__init__(self, logfile, when='d',
                                           interval=1, backupCount=10)
+
+
+class HostnameFormatter(logging.Formatter):
+    """
+    Formatter that adds a hostname field to the LogRecord
+    """
+    def format(self, record):
+        record.hostname = socket.gethostname()
+        record = super(HostnameFormatter, self).format(record)
+        return record

@@ -24,7 +24,7 @@ from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
 import logging
-from logging import Formatter, StreamHandler
+from logging import StreamHandler
 import os
 import signal
 import socket
@@ -37,7 +37,7 @@ from tornado.ioloop import IOLoop
 from tornado.options import define
 
 from supercell.environment import Environment
-from supercell.logging import SupercellLoggingHandler
+from supercell.logging import HostnameFormatter, SupercellLoggingHandler
 
 
 define('logfile', default='root-%(pid)s.log',
@@ -47,6 +47,9 @@ define('logfile', default='root-%(pid)s.log',
 
 
 define('loglevel', default='INFO', help='Log level')
+
+define('logformat', default='%(asctime)s [%(levelname)s] %(hostname)s ' +
+       '%(name)s:  %(message)s', help='format string for logging formatter')
 
 define('suppress_health_check_log', default=False,
        help='Suppress the access logging for the system health check.')
@@ -271,11 +274,8 @@ class Service(object):
         if len(hdlrs) == 0:
             root.setLevel(getattr(logging, self.config.loglevel))
             hdlr = clazz(logfile)
-            formatter = Formatter(' - '.join(['[%(asctime)s',
-                                              '%(relativeCreated).3f]',
-                                              '%(name)s',
-                                              '%(levelname)s',
-                                              '%(message)s']))
+            formatter = HostnameFormatter(self.config.logformat)
+
             hdlr.setFormatter(formatter)
             root.addHandler(hdlr)
 
