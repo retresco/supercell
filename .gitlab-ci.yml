@@ -1,0 +1,85 @@
+image: python:3.6
+
+before_script:
+  # Install pyenv
+  - apt-get update
+  - apt-get install -y make build-essential libssl1.0-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev
+  - git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+  - export PYENV_ROOT="$HOME/.pyenv"
+  - export PATH="$PYENV_ROOT/bin:$PATH"
+  - eval "$(pyenv init -)"
+
+stages:
+  - build
+  - test
+  - sonar
+
+build:
+  stage: build
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - env
+      - domain.egg-info
+  script:
+    - pyenv install 2.7.14
+    - pyenv shell 2.7.14
+    - pip install -r requirements.txt
+    - pip install -r requirements-test.txt
+    - pip install unittest2
+    - python setup.py install
+    - pyenv install 3.6.6
+    - pyenv shell 3.6.6
+    - pip install -r requirements.txt
+    - pip install -r requirements-test.txt
+    - python setup.py install
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - env
+      - domain.egg-info
+
+test:python27:
+  stage: test
+  script:
+  - pyenv shell 2.7.14
+  - py.test test
+
+test:python36:
+  stage: test
+  script:
+  - pyenv shell 3.6.6
+  - py.test test
+
+sonar:
+  stage: sonar
+  image: eden.rtrsupport.de:5050/puppet/gitlab-sonar-scanner
+  dependencies:
+    - test:python36
+  variables:
+    SONAR_ANALYSIS_MODE: publish
+  before_script:
+    - projectVersion=$(awk -F\" '/version/ {print $4}' conf/options.json)
+    - echo sonar.projectVersion=${projectVersion} >> sonar-project.properties
+  script:
+    - tail -1 sonar-project.properties
+    - sonar-scanner-run.sh
+  only:
+    - develop
+  tags:
+    - dind
+
+sonar-preview:
+  stage: sonar
+  image: eden.rtrsupport.de:5050/puppet/gitlab-sonar-scanner
+  before_script: []
+  script:
+    - sonar-scanner -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN -Dsonar.analysis.mode=preview -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME -Dsonar.gitlab.project_id=$CI_PROJECT_ID
+  only:
+    - branches
+  except:
+    - develop
+    - master
+  tags:
+    - dind
+
