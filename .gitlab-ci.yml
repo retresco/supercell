@@ -1,85 +1,63 @@
-image: python:3.6
+variables:
+  PIP_CACHE_DIR: "${CI_PROJECT_DIR}/.cache/pip"
 
-before_script:
-  # Install pyenv
-  - apt-get update
-  - apt-get install -y make build-essential libssl1.0-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev
-  - git clone https://github.com/pyenv/pyenv.git ~/.pyenv
-  - export PYENV_ROOT="$HOME/.pyenv"
-  - export PATH="$PYENV_ROOT/bin:$PATH"
-  - eval "$(pyenv init -)"
-
-stages:
-  - build
-  - test
-  - sonar
-
-build:
-  stage: build
+.test_template: &test_template
+  stage: test
   cache:
-    key: "$CI_COMMIT_REF_SLUG"
+    key: ${CI_JOB_NAME}
     paths:
-      - env
-      - domain.egg-info
-  script:
-    - pyenv install 2.7.14
-    - pyenv shell 2.7.14
-    - pip install -r requirements.txt
-    - pip install -r requirements-test.txt
-    - pip install unittest2
-    - python setup.py install
-    - pyenv install 3.6.6
-    - pyenv shell 3.6.6
-    - pip install -r requirements.txt
-    - pip install -r requirements-test.txt
-    - python setup.py install
+      - .cache/pip
   artifacts:
     expire_in: 1 day
     paths:
-      - env
-      - domain.egg-info
-
-test:python27:
-  stage: test
+      - coverage.xml
   script:
-  - pyenv shell 2.7.14
-  - py.test test
+    - make install-test
+    - make test
+  coverage: '/^TOTAL.*\s+(\d+\%)$/'
 
-test:python36:
-  stage: test
-  script:
-  - pyenv shell 3.6.6
-  - py.test test
-
-sonar:
+.sonar_template: &sonar_template
   stage: sonar
-  image: eden.rtrsupport.de:5050/puppet/gitlab-sonar-scanner
-  dependencies:
-    - test:python36
+  image: ciricihq/gitlab-sonar-scanner
   variables:
     SONAR_ANALYSIS_MODE: publish
   before_script:
-    - projectVersion=$(awk -F\" '/version/ {print $4}' conf/options.json)
-    - echo sonar.projectVersion=${projectVersion} >> sonar-project.properties
+    #- projectVersion=$(awk -F\" '/^__version__ = / {print $2}' supercell/__init__.py)
+    #- echo sonar.projectVersion=${projectVersion} >> sonar-project.properties
+    - echo "sonar.projectKey=RTR:${projectKey}" >> sonar-project.properties
+    - echo "sonar.projectName=Python\ ::\ ${projectKey}" >> sonar-project.properties
   script:
-    - tail -1 sonar-project.properties
+    - tail -2 sonar-project.properties
+    - ls -l coverage.xml
     - sonar-scanner-run.sh
   only:
     - develop
-  tags:
-    - dind
 
-sonar-preview:
-  stage: sonar
-  image: eden.rtrsupport.de:5050/puppet/gitlab-sonar-scanner
-  before_script: []
-  script:
-    - sonar-scanner -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_TOKEN -Dsonar.analysis.mode=preview -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME -Dsonar.gitlab.project_id=$CI_PROJECT_ID
-  only:
-    - branches
-  except:
-    - develop
-    - master
-  tags:
-    - dind
+before_script:
+  - pip install virtualenv
 
+stages:
+  - test
+  - sonar
+
+test:27:
+  image: python:2.7
+  <<: *test_template
+
+test:36:
+  image: python:3.6
+  <<: *test_template
+
+sonar:27:
+  <<: *sonar_template
+  dependencies:
+    - test:27
+  variables:
+    projectKey: supercell-27
+
+sonar:36:
+  <<: *sonar_template
+  dependencies:
+    - test:36
+  variables:
+    projectKey: supercell-36
