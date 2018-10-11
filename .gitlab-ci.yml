@@ -11,6 +11,9 @@ variables:
     expire_in: 1 day
     paths:
       - coverage.xml
+  before_script:
+    - pip install virtualenv
+    - virtualenv env
   script:
     - make install-test
     - make test
@@ -32,9 +35,6 @@ variables:
     - sonar-scanner-run.sh
   only:
     - develop
-
-before_script:
-  - pip install virtualenv
 
 stages:
   - test
