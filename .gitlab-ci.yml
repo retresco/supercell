@@ -15,7 +15,7 @@ variables:
     - pip install virtualenv
     - virtualenv env
   script:
-    - make install-test
+    - make install
     - make test
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
 

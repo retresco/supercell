@@ -8,7 +8,7 @@
 *.egg-info
 dist
 build
-env
+env*
 eggs
 parts
 bin
@@ -44,6 +44,7 @@ coverage.xml
 .ropeproject
 
 .idea
+.cache
 
 ######
 # docs
