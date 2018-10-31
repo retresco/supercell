@@ -1,3 +1,23 @@
+0.8.2 - (unreleased)
+---------------------
+
+New Features
+~~~~~~~~~~~~
+
+
+Bugfixes / Improvements
+~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Development Changes
+~~~~~~~~~~~~~~~~~~~
+
+
+Migration
+~~~~~~~~~
+
+
+
 0.8.1 - (May 2, 2018)
 ---------------------
 
