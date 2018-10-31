@@ -20,6 +20,7 @@ variables:
     - make test
     - set +e
     - 'env/bin/pylint supercell --jobs=0 --reports=no --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" > pylint-report.txt'
+    - cat pylint-report.txt
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
 
 .sonar_template: &sonar_template
