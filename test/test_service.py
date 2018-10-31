@@ -93,16 +93,6 @@ class ServiceTest(TestCase):
         env = service.environment
         self.assertIsInstance(env, Environment)
 
-    def test_parse_config_files(self):
-        service = s.Service()
-        env = service.environment
-        env.config_file_paths.append('test/')
-        tornado.options.define('test', default='default')
-        service.parse_config_files()
-
-        from tornado.options import options
-        self.assertEqual('filevalue', options.test)
-
     def test_logging_initialization(self):
         service = s.Service()
         env = service.environment
@@ -197,3 +187,22 @@ class ApplicationIntegrationTest(AsyncHTTPTestCase):
     def test_get_with_exception(self):
         response = self.fetch('/exception')
         self.assertEqual(500, response.code)
+
+
+@pytest.fixture
+def test_env_var(monkeypatch):
+    monkeypatch.setenv("TEST", "envvalue")
+
+
+def test_config_parsing(test_env_var):
+    service = s.Service()
+    env = service.environment
+    env.config_file_paths.append('test/')
+    tornado.options.define('test', default='default')
+    service.parse_config_files()
+
+    from tornado.options import options
+    assert 'filevalue' == options.test
+
+    service.parse_environment_variables(options)
+    assert 'envvalue' == options.test
