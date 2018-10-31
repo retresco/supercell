@@ -22,9 +22,8 @@ variables:
 .sonar_template: &sonar_template
   stage: sonar
   image: ciricihq/gitlab-sonar-scanner
-  variables:
-    SONAR_ANALYSIS_MODE: publish
   before_script:
+    - export SONAR_ANALYSIS_MODE=publish
     - projectVersion=$(awk -F\" '/^__version__ = / {print $2}' supercell/__init__.py)
     - echo sonar.projectVersion=${projectVersion} >> sonar-project.properties
     - echo "sonar.projectKey=RTR:${projectKey}" >> sonar-project.properties
