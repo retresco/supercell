@@ -29,6 +29,7 @@ variables:
     - echo sonar.projectVersion=${projectVersion} >> sonar-project.properties
     - echo "sonar.projectKey=RTR:${projectKey}" >> sonar-project.properties
     - echo "sonar.projectName=Python\ ::\ ${projectKey}" >> sonar-project.properties
+    - echo "sonar.sources=supercell" >> sonar-project.properties
   script:
     - tail -2 sonar-project.properties
     - ls -l coverage.xml
