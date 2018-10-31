@@ -11,12 +11,14 @@ variables:
     expire_in: 1 day
     paths:
       - coverage.xml
+      - pylint-report.txt
   before_script:
     - pip install virtualenv
     - virtualenv env
   script:
     - make install
     - make test
+    - 'env/bin/pylint supercell --jobs=0 --reports=no --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" > pylint-report.txt'
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
 
 .sonar_template: &sonar_template
@@ -29,6 +31,7 @@ variables:
     - echo "sonar.projectKey=RTR:${projectKey}" >> sonar-project.properties
     - 'echo "sonar.projectName=Python :: ${projectKey}" >> sonar-project.properties'
     - echo "sonar.sources=supercell" >> sonar-project.properties
+    - echo "sonar.python.pylint.reportPath=pylint-report.txt" >> sonar-project.properties
   script:
     - tail -2 sonar-project.properties
     - ls -l coverage.xml
