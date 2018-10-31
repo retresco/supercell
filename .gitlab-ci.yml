@@ -28,7 +28,7 @@ variables:
     - projectVersion=$(awk -F\" '/^__version__ = / {print $2}' supercell/__init__.py)
     - echo sonar.projectVersion=${projectVersion} >> sonar-project.properties
     - echo "sonar.projectKey=RTR:${projectKey}" >> sonar-project.properties
-    - echo "sonar.projectName=Python :: ${projectKey}" >> sonar-project.properties
+    - 'echo "sonar.projectName=Python :: ${projectKey}" >> sonar-project.properties'
     - echo "sonar.sources=supercell" >> sonar-project.properties
   script:
     - tail -2 sonar-project.properties
