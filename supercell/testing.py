@@ -36,8 +36,7 @@ class AsyncHTTPTestCase(TornadoAsyncHTTPTestCase):
         monkeypatch.setattr(sys, 'argv', ['pytest'] + self.ARGV)
 
     def get_new_ioloop(self):
-        return IOLoop.current\
-            ()
+        return IOLoop.current()
 
     def get_app(self):
         service = self.SERVICE()
