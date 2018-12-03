@@ -23,7 +23,6 @@ import sys
 import pytest
 import json
 
-from tornado.ioloop import IOLoop
 from tornado.testing import AsyncHTTPTestCase
 from tornado.web import HTTPError
 
@@ -108,9 +107,6 @@ class ApplicationIntegrationTest(AsyncHTTPTestCase):
     @pytest.fixture(autouse=True)
     def empty_commandline(self, monkeypatch):
         monkeypatch.setattr(sys, 'argv', [])
-
-    def get_new_ioloop(self):
-        return IOLoop.instance()
 
     def get_app(self):
         service = MyService()
