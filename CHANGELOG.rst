@@ -13,6 +13,12 @@ New Features
 Bugfixes / Improvements
 ~~~~~~~~~~~~~~~~~~~~~~~
 
+* Requirements update:
+    * tornado: >=4.2.1,<=5.1.1
+    * schematics: >= 1.1.1
+
+* Due to a security risk, query values in responding error messages encode
+  html (<,>,&) now
 
 Development Changes
 ~~~~~~~~~~~~~~~~~~~
