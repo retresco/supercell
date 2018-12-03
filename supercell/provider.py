@@ -27,6 +27,7 @@ from tornado import escape
 from supercell._compat import with_metaclass, error_messages
 from supercell.mediatypes import ContentType, MediaType
 from supercell.acceptparsing import parse_accept_header
+from supercell.utils import escape_contents
 
 __all__ = ['NoProviderFound', 'ProviderBase', 'JsonProvider']
 
@@ -177,7 +178,7 @@ class JsonProvider(ProviderBase):
             handler.write(model.to_primitive())
         except ModelValidationError as e:
             raise HTTPError(500, reason=json.dumps({
-                "result_model": error_messages(e)
+                "result_model": escape_contents(error_messages(e))
             }))
 
     def error(self, status_code, message, handler):
@@ -210,7 +211,7 @@ class TornadoTemplateProvider(ProviderBase):
             handler.render(handler.get_template(model), **model.to_primitive())
         except ModelValidationError as e:
             raise HTTPError(500, reason=json.dumps({
-                "result_model": error_messages(e)
+                "result_model": escape_contents(error_messages(e))
             }))
 
     def error(self, status_code, message, handler):
