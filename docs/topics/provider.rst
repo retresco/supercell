@@ -32,8 +32,8 @@ A provider can be created equivalently to a consumer::
                 model.validate()
                 handler.write(model.to_primitive())
             except ModelValidationError as e:
-                e.messages = {"result_model": e.messages}
-                raise HTTPError(500, reason=json.dumps(e.messages))
+                # for schematics 1.1.1, use e.messages instead
+                raise HTTPError(500, reason=json.dumps(e.to_primitive()))
 
         def error(self, status_code, message, handler):
             handler.finish(message)

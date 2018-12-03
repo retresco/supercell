@@ -24,9 +24,10 @@ from schematics.exceptions import ModelValidationError
 from tornado.web import HTTPError
 from tornado import escape
 
-from supercell._compat import with_metaclass
+from supercell._compat import with_metaclass, error_messages
 from supercell.mediatypes import ContentType, MediaType
 from supercell.acceptparsing import parse_accept_header
+from supercell.utils import escape_contents
 
 __all__ = ['NoProviderFound', 'ProviderBase', 'JsonProvider']
 
@@ -176,8 +177,9 @@ class JsonProvider(ProviderBase):
             model.validate(partial=partial)
             handler.write(model.to_primitive())
         except ModelValidationError as e:
-            e.messages = {"result_model": e.messages}
-            raise HTTPError(500, reason=json.dumps(e.messages))
+            raise HTTPError(500, reason=json.dumps({
+                "result_model": escape_contents(error_messages(e))
+            }))
 
     def error(self, status_code, message, handler):
         """Simply return errors in  json.
@@ -208,8 +210,9 @@ class TornadoTemplateProvider(ProviderBase):
             model.validate()
             handler.render(handler.get_template(model), **model.to_primitive())
         except ModelValidationError as e:
-            e.messages = {"result_model": e.messages}
-            raise HTTPError(500, reason=json.dumps(e.messages))
+            raise HTTPError(500, reason=json.dumps({
+                "result_model": escape_contents(error_messages(e))
+            }))
 
     def error(self, status_code, message, handler):
         """Simply return errors in  html

@@ -8,6 +8,7 @@
 *.egg-info
 dist
 build
+env*
 eggs
 parts
 bin
@@ -26,6 +27,7 @@ pip-log.txt
 .tox
 nosetests.xml
 coverage.xml
+pylint-report.txt
 
 # Translations
 *.mo
@@ -43,6 +45,7 @@ coverage.xml
 .ropeproject
 
 .idea
+.cache
 
 ######
 # docs

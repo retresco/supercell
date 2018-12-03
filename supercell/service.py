@@ -205,12 +205,17 @@ class Service(object):
     def config(self):
         """Assemble the configration files and command line arguments in order
         to finalize the service's configuration. All configuration values
-        can be overwritten by the command line."""
+        can be overwritten by the command line and/or environment variables.
+
+        precedence:
+            command line arguments > environment variables > config file
+        """
         if not hasattr(self, '_config'):
             # parse config files and command line arguments
             self.parse_config_files()
-            self.parse_command_line()
             from tornado.options import options
+            self.parse_environment_variables(options)
+            self.parse_command_line()
             self._config = options
         return self._config
 
@@ -249,6 +254,18 @@ class Service(object):
         """Parse the command line arguments to set different configuration
         values."""
         tornado.options.parse_command_line()
+
+    def parse_environment_variables(self, options, final=True):
+        """
+        Parse environment variables to set different configuration values.
+        """
+        for name in options:
+            env = os.getenv(name.replace('-', '_').upper())
+            if env is not None:
+                options._options[options._normalize_name(name)].parse(env)
+
+        if final:
+            options.run_parse_callbacks()
 
     def initialize_logging(self):
         """Initialize the python logging system.

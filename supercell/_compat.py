@@ -20,6 +20,8 @@ Python 2.6/2.7/3.3 compatibility module.
 
 Heavily inspired by jinja2 and
 http://lucumr.pocoo.org/2013/5/21/porting-to-python-3-redux/
+
+Also provides a schematics 1.1.1 compatibility helper.
 """
 import sys
 
@@ -79,3 +81,10 @@ def with_metaclass(meta, *bases):
             return meta(name, bases, d)
 
     return metaclass('temporary_class', None, {})
+
+
+def error_messages(schematics_error):
+    if hasattr(schematics_error, 'to_primitive'):
+        return schematics_error.to_primitive()
+    else:
+        return schematics_error.messages

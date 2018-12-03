@@ -22,6 +22,7 @@ from __future__ import (absolute_import, division, print_function,
 from schematics.exceptions import ConversionError, ValidationError
 
 import supercell.api as s
+from supercell._compat import error_messages
 
 
 class QueryParams(s.Middleware):
@@ -78,7 +79,7 @@ class QueryParams(s.Middleware):
                     parsed = typedef(handler.get_argument(name))
                     q[name] = parsed
                 except (ConversionError, ValidationError) as e:
-                    validation_errors = {name: e.messages}
+                    validation_errors = {name: error_messages(e)}
                     raise s.Error(additional=validation_errors)
             elif typedef.required and not handler.get_argument(name, None):
                 raise s.Error(additional={'msg':

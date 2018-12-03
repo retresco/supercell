@@ -44,7 +44,7 @@ if PY2:
 
 setup(
     name='supercell',
-    version='.'.join([str(v) for v in init.__version__]),
+    version=init.__version__,
 
     author='Daniel Truemper',
     author_email='truemped@gmail.com',

@@ -1,3 +1,39 @@
+0.8.2 - (unreleased)
+---------------------
+
+New Features
+~~~~~~~~~~~~
+
+* Add configuration via environment variables. The load precedence of service
+  configurations is:
+
+  environment variables > command line arguments > config file
+
+
+Bugfixes / Improvements
+~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Development Changes
+~~~~~~~~~~~~~~~~~~~
+
+* Add gitlab-ci configuration to the project to run automatic testing
+  The configuration is not part of the released package
+
+* Add Makefile to build and test the project in python 2.7, 3.6 and a local version
+  To build and test the project run:
+
+  .. code-block:: bash
+
+    make install test
+
+  The Makefile is not part of the released package
+
+Migration
+~~~~~~~~~
+
+
+
 0.8.1 - (May 2, 2018)
 ---------------------
 
