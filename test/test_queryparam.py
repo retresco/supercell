@@ -24,7 +24,6 @@ from schematics.models import Model
 from schematics.types import StringType
 from schematics.types import IntType
 
-from tornado.ioloop import IOLoop
 from tornado.testing import AsyncHTTPTestCase
 
 import supercell.api as s
@@ -77,9 +76,6 @@ class TestSimpleQueryParam(AsyncHTTPTestCase):
         env.add_handler('/test', MyQueryparamHandler)
         env.tornado_settings['debug'] = True
         return env.get_application()
-
-    def get_new_ioloop(self):
-        return IOLoop.instance()
 
     def test_simple_params(self):
         response = self.fetch('/test?docid=1&message=A%20test')

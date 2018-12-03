@@ -112,12 +112,12 @@ class Service(object):
 
         if with_signals:
             def sig_handler(sig, frame):
-                IOLoop.instance().add_callback(self.shutdown)    # noqa
+                IOLoop.current().add_callback(self.shutdown)    # noqa
             signal.signal(signal.SIGTERM, sig_handler)
             signal.signal(signal.SIGINT, sig_handler)
 
         self.slog.info('Starting supercell')
-        IOLoop.instance().start()
+        IOLoop.current().start()
 
     def shutdown(self):
         """Gaceful shutdown of the server.
@@ -127,7 +127,7 @@ class Service(object):
         current requests are allowed to finish. After this period the `IOLoop`
         is stopped.
         """
-        io_loop = IOLoop.instance()
+        io_loop = IOLoop.current()
         self.slog.info('Stopping HTTP server')
         self.server.stop()
 

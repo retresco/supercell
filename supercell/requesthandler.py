@@ -36,7 +36,7 @@ from tornado.web import (RequestHandler as rq, HTTPError,
 
 from supercell._compat import error_messages, text_type
 from supercell.cache import compute_cache_header
-from supercell.mediatypes import MediaType, ReturnInformationT
+from supercell.mediatypes import Error, MediaType, ReturnInformationT
 from supercell.consumer import ConsumerBase, NoConsumerFound
 from supercell.provider import ProviderBase, NoProviderFound
 
@@ -316,3 +316,12 @@ class RequestHandler(rq):
         if validate:
             model.validate()
         return model
+
+    def _handle_request_exception(self, e):
+        """
+        convert supercell errors to tornado errors so they can be used
+        in handlers defined with the async/await syntax
+        """
+        if isinstance(e, Error):
+            e = HTTPError(status_code=e.value.code, msg=e.value.message)
+        super(RequestHandler, self)._handle_request_exception(e)

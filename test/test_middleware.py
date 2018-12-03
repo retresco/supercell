@@ -20,7 +20,6 @@ from __future__ import (absolute_import, division, print_function,
 
 import json
 
-from tornado.ioloop import IOLoop
 from tornado.testing import AsyncHTTPTestCase
 
 from schematics.models import Model
@@ -125,9 +124,6 @@ class TestDummyHeaderMiddleware(AsyncHTTPTestCase):
         env.add_handler('/test', MyHandler)
         env.add_handler('/otherresult', MyHandlerReturningOtherStuff)
         return env.get_application()
-
-    def get_new_ioloop(self):
-        return IOLoop.instance()
 
     def test_that_header_exists(self):
         response = self.fetch('/test')

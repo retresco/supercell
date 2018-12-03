@@ -20,7 +20,6 @@ from __future__ import (absolute_import, division, print_function,
 
 import json
 
-from tornado.ioloop import IOLoop
 from tornado.testing import AsyncHTTPTestCase
 
 from supercell.health import SystemHealthCheck
@@ -29,9 +28,6 @@ from supercell.environment import Environment
 
 
 class TestBasicHealthChecks(AsyncHTTPTestCase):
-
-    def get_new_ioloop(self):
-        return IOLoop.instance()
 
     def get_app(self):
         env = Environment()
@@ -62,9 +58,6 @@ class SimpleErrorCheckExample(s.RequestHandler):
 
 
 class TestCustomHealthCheck(AsyncHTTPTestCase):
-
-    def get_new_ioloop(self):
-        return IOLoop.instance()
 
     def get_app(self):
         env = Environment()
