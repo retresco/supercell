@@ -20,6 +20,10 @@ Bugfixes / Improvements
 * Due to a security risk, query values in responding error messages encode
   html (<,>,&) now
 
+* HTTP response status 406 if no matching provider is found. If the request is
+  not parsable (400) and no matching provider (406) the responded http status is
+  406.
+
 Development Changes
 ~~~~~~~~~~~~~~~~~~~
 

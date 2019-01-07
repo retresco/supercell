@@ -169,6 +169,20 @@ class ApplicationIntegrationTest(AsyncHTTPTestCase):
                                        'Content-Type': 'application/json'})
         self.eval_html(response, 400)
 
+    def test_that_wrong_accept_type_is_an_error(self):
+        response = self.fetch('/test-model', method='POST',
+                              body='{"doc_id":"id", "doc_bool":"unknown"}',
+                              headers={'Accept': 'application/unexpected',
+                                       'Content-Type': 'application/json'})
+        self.eval_html(response, 406)
+
+        response = self.fetch('/test-model', method='POST',
+                              body='{"doc_id":"id", "doc_bool":"unknown"}',
+                              headers={'Accept': 'text/html',
+                                       'Content-Type': 'application/unexpected'}
+                              )
+        self.eval_html(response, 400)
+
     def test_that_invalid_return_model_is_an_error(self):
         response = self.fetch('/test-model', method='POST',
                               body='{"doc_id":"id", "doc_bool":"True"}',
