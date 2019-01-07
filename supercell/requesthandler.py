@@ -265,7 +265,8 @@ class RequestHandler(rq):
                 provider_class, provider_config = ProviderBase.map_provider(
                     headers.get('Accept', ''), self, allow_default=True)
             except NoProviderFound:
-                raise HTTPError(406)
+                raise HTTPError(406,
+                                reason="Can not produce acceptable response")
 
             provider = provider_class()
             if isinstance(result, Model):
@@ -275,13 +276,22 @@ class RequestHandler(rq):
             self.finish()
 
     def write_error(self, status_code, **kwargs):
+        """
+        If there is any provider decorator, try to find the corresponding
+        provider and use it's write_error message.
+        """
+        if not ProviderBase.has_provider(self):
+            super(RequestHandler, self).write_error(status_code, **kwargs)
+            return
+
         try:
             provider_class, _ = ProviderBase.map_provider(
                 self.request.headers.get('Accept', ''), self,
                 allow_default=True)
             provider_class().error(status_code, self._reason, self)
         except NoProviderFound:
-            super(RequestHandler, self).write_error(status_code, **kwargs)
+            self.set_status(406, reason="Can not produce acceptable response")
+            super(RequestHandler, self).write_error(406)
 
     def load_model_from_arguments(self, model_cls, validate=True, **kwargs):
         """

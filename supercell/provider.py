@@ -80,6 +80,16 @@ class ProviderBase(with_metaclass(ProviderMeta, object)):
     """
 
     @staticmethod
+    def has_provider(handler):
+        """
+        Find out if any provider decorator is used in a given handler.
+
+        :param handler: supercell request handler
+        :return: true if any provider is used, else false
+        """
+        return hasattr(handler, '_PROD_CONTENT_TYPES')
+
+    @staticmethod
     def map_provider(accept_header, handler, allow_default=False):
         """Map a given content type to the correct provider implementation.
 
@@ -119,6 +129,9 @@ class ProviderBase(with_metaclass(ProviderMeta, object)):
                 configuration = handler._PROD_CONFIGURATION[ctype]
                 if len(known_types) == 1:
                     return (known_types[0][1], configuration)
+
+            if len(accept_header) > 0:
+                raise NoProviderFound()
 
         if allow_default and 'default' in handler._PROD_CONTENT_TYPES:
             content_type = handler._PROD_CONTENT_TYPES['default']
