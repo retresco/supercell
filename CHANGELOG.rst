@@ -1,5 +1,5 @@
-0.8.2 - (unreleased)
----------------------
+0.8.2 - (January 8, 2019)
+-------------------------
 
 New Features
 ~~~~~~~~~~~~
@@ -13,6 +13,16 @@ New Features
 Bugfixes / Improvements
 ~~~~~~~~~~~~~~~~~~~~~~~
 
+* Requirements update:
+    * tornado: >=4.2.1,<=5.1.1
+    * schematics: >= 1.1.1
+
+* Due to a security risk, query values in responding error messages encode
+  html (<,>,&) now
+
+* HTTP response status 406 if no matching provider is found. If the request is
+  not parsable (400) and no matching provider (406) the responded http status is
+  406.
 
 Development Changes
 ~~~~~~~~~~~~~~~~~~~

@@ -18,3 +18,11 @@ In the list of contributing to the codebase:
 - Steffen Becker < steffen.becker at retresco de >
 
 - Andreas Peldszus < andreas.peldszus at retresco de >
+
+- Jannis Uhlendorf < jannis.uhlendorf at restresco.de >
+
+- Wolfgang Seeker < wolfgang.seeker at retresco.de >
+
+- Stephan Becker < stephan.becker at retresco.de >
+
+- Andrii Kucherenko < andrii.kucherenko at retresco.de >
