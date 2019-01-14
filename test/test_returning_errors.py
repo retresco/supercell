@@ -88,6 +88,17 @@ class MyErrorHandler(RequestHandler):
 @provides(MediaType.TextHtml)
 @provides(MediaType.ApplicationJson, default=True)
 @consumes(MediaType.ApplicationJson, SimpleModel)
+class MyWorkingModelHandler(RequestHandler):
+
+    @async
+    def post(self, model, **kwargs):
+        response_model = SimpleModel({'doc_id': 'id', 'doc_bool': True})
+        raise Return(response_model)
+
+
+@provides(MediaType.TextHtml)
+@provides(MediaType.ApplicationJson, default=True)
+@consumes(MediaType.ApplicationJson, SimpleModel)
 class MyExceptionHandler(RequestHandler):
     @async
     def get(self, *args, **kwargs):
@@ -101,6 +112,7 @@ class MyService(Service):
         env.add_handler('/test-model', MyModelHandler, {})
         env.add_handler('/test-error', MyErrorHandler, {})
         env.add_handler('/test-exception', MyExceptionHandler, {})
+        env.add_handler('/test-model-no-error', MyWorkingModelHandler, {})
 
 
 class ApplicationIntegrationTest(AsyncHTTPTestCase):
@@ -182,6 +194,19 @@ class ApplicationIntegrationTest(AsyncHTTPTestCase):
                                        'Content-Type': 'application/unexpected'}
                               )
         self.eval_html(response, 400)
+
+    def test_that_empty_accept_type_works(self):
+        response = self.fetch('/test-model-no-error', method='POST',
+                              body='{"doc_id":"id", "doc_bool":"true"}',
+                              headers={'Accept': '',
+                                       'Content-Type': 'application/json'})
+        self.assertEqual(200, response.code)
+
+        response = self.fetch('/test-model-no-error', method='POST',
+                              body='{"doc_id":"id", "doc_bool":"true"}',
+                              headers={'Accept': '*/*',
+                                       'Content-Type': 'application/json'})
+        self.assertEqual(200, response.code)
 
     def test_that_invalid_return_model_is_an_error(self):
         response = self.fetch('/test-model', method='POST',

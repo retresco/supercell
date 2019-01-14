@@ -130,7 +130,8 @@ class ProviderBase(with_metaclass(ProviderMeta, object)):
                 if len(known_types) == 1:
                     return (known_types[0][1], configuration)
 
-            if len(accept_header) > 0:
+            accept_types = [t[0] for t in accept]
+            if len(accept_header) > 0 and '*/*' not in accept_types:
                 raise NoProviderFound()
 
         if allow_default and 'default' in handler._PROD_CONTENT_TYPES:
