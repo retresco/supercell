@@ -29,7 +29,7 @@ from tornado.web import HTTPError
 from schematics.models import Model
 from schematics.types import BooleanType, StringType
 
-from supercell.api import async
+from supercell.api import coroutine
 from supercell.api import provides
 from supercell.api import consumes
 from supercell.api import MediaType
@@ -43,11 +43,11 @@ from supercell.api import Error
 @provides('application/json', default=True)
 @consumes(MediaType.ApplicationJson, object)
 class MySimpleHandler(RequestHandler):
-    @async
+    @coroutine
     def get(self):
         raise Return({"this": "is not returned"})
 
-    @async
+    @coroutine
     def post(self):
         raise Return({"this": "is not returned"})
 
@@ -61,12 +61,12 @@ class SimpleModel(Model):
 @provides(MediaType.ApplicationJson, default=True)
 @consumes(MediaType.ApplicationJson, SimpleModel)
 class MyModelHandler(RequestHandler):
-    @async
+    @coroutine
     def get(self, model, **kwargs):
         invalid_model = SimpleModel({'doc_id': 'id'})
         raise Return(invalid_model)
 
-    @async
+    @coroutine
     def post(self, model, **kwargs):
         invalid_model = SimpleModel({'doc_id': 'id'})
         raise Return(invalid_model)
@@ -76,11 +76,11 @@ class MyModelHandler(RequestHandler):
 @provides(MediaType.ApplicationJson, default=True)
 @consumes(MediaType.ApplicationJson, SimpleModel)
 class MyErrorHandler(RequestHandler):
-    @async
+    @coroutine
     def get(self, *args, **kwargs):
         raise Error(406, additional={'message': 'My own error', 'code': 406})
 
-    @async
+    @coroutine
     def post(self, model, **kwargs):
         raise HTTPError(406, reason='My own error')
 
@@ -89,7 +89,7 @@ class MyErrorHandler(RequestHandler):
 @provides(MediaType.ApplicationJson, default=True)
 @consumes(MediaType.ApplicationJson, SimpleModel)
 class MyExceptionHandler(RequestHandler):
-    @async
+    @coroutine
     def get(self, *args, **kwargs):
         raise Exception('My exception')
 

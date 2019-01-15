@@ -37,7 +37,7 @@ class SimpleMessage(Model):
 @provides(s.MediaType.ApplicationJson, default=True)
 class MyHandler(RequestHandler):
 
-    @s.async
+    @s.coroutine
     def get(self, *args, **kwargs):
         raise s.Return(SimpleMessage({"doc_id": 'test123',
                                       "message": 'A test'}))
@@ -46,7 +46,7 @@ class MyHandler(RequestHandler):
 @provides(s.MediaType.ApplicationJson, default=True)
 class MyExtremeCachingHandler(RequestHandler):
 
-    @s.async
+    @s.coroutine
     def get(self, *args, **kwargs):
         raise s.Return(SimpleMessage({"doc_id": 'test123',
                                       "message": 'A test'}))
@@ -55,7 +55,7 @@ class MyExtremeCachingHandler(RequestHandler):
 @provides(s.MediaType.ApplicationJson, default=True)
 class MyPrivateCaching(RequestHandler):
 
-    @s.async
+    @s.coroutine
     def get(self, *args, **kwargs):
         raise s.Return(SimpleMessage({"doc_id": 'test123',
                                       "message": 'A test'}))
@@ -64,7 +64,7 @@ class MyPrivateCaching(RequestHandler):
 @provides(s.MediaType.ApplicationJson, default=True)
 class CachingWithYielding(RequestHandler):
 
-    @s.async
+    @s.coroutine
     def get(self, *args, **kwargs):
         result = yield self.a_coroutine()
         assert result, 'yes'
@@ -85,7 +85,7 @@ class CachingWithYielding(RequestHandler):
 @provides(s.MediaType.ApplicationJson, default=True)
 class CachingWithoutDecorator(RequestHandler):
 
-    @s.async
+    @s.coroutine
     def get(self, *args, **kwargs):
         raise s.Return(SimpleMessage({"doc_id": 'test123',
                                       "message": 'A test'}))

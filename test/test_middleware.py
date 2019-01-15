@@ -53,38 +53,38 @@ class ReturnOtherResult(Middleware):
 
 class AddDummyHeader(Middleware):
 
-    @s.async
+    @s.coroutine
     def before(self, handler, args, kwargs):
         yield self.add_another_header(handler)
 
-    @s.async
+    @s.coroutine
     def add_another_header(self, handler):
         handler.add_header('X-Dummy2', 'nice')
         raise s.Return(None)
 
-    @s.async
+    @s.coroutine
     def after(self, handler, args, kwargs, result):
         yield self.add_header(handler)
 
-    @s.async
+    @s.coroutine
     def add_header(self, handler):
         handler.add_header('X-Dummy', 'kewl')
 
 
 class RewriteQueryParam(Middleware):
 
-    @s.async
+    @s.coroutine
     def before(self, handler, args, kwargs):
         arg = handler.get_argument('id', None)
         if arg:
             new_arg = arg.replace('test', 'TEST')
             handler.request.arguments['id'] = [new_arg]
 
-    @s.async
+    @s.coroutine
     def after(self, handler, args, kwargs, result):
         yield self.wait_a_little()
 
-    @s.async
+    @s.coroutine
     def wait_a_little(self):
         return
 
@@ -94,7 +94,7 @@ class MyHandler(s.RequestHandler):
 
     @AddDummyHeader()
     @RewriteQueryParam()
-    @s.async
+    @s.coroutine
     def get(self, *args, **kwargs):
         doc_id = self.get_argument('id', 'test123')
         model = yield self.get_message(doc_id)
@@ -111,7 +111,7 @@ class MyHandlerReturningOtherStuff(s.RequestHandler):
 
     @RewriteQueryParam()
     @ReturnOtherResult()
-    @s.async
+    @s.coroutine
     def get(self, *args, **kwargs):
         raise s.Return(SimpleMessage({"doc_id": "yo",
                                       "message": 'A test'}))

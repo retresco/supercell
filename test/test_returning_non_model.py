@@ -24,7 +24,7 @@ import pytest
 
 from tornado.testing import AsyncHTTPTestCase
 
-from supercell.api import async
+from supercell.api import coroutine
 from supercell.api import provides
 from supercell.api import RequestHandler
 from supercell.api import Return
@@ -34,7 +34,7 @@ from supercell.api import Service
 @provides('application/json', default=True)
 class MyHandler(RequestHandler):
 
-    @async
+    @coroutine
     def get(self):
         raise Return({"this": "is not returned"})
 

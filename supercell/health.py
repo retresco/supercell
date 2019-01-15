@@ -66,7 +66,7 @@ and an error a similar one::
 from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
-from tornado.gen import coroutine as async
+from tornado.gen import coroutine
 
 from supercell.decorators import provides
 from supercell.mediatypes import Ok, Error, MediaType
@@ -130,7 +130,7 @@ class SystemHealthCheck(RequestHandler):
     deal with the number of requests coming from the outside.
     """
 
-    @async
+    @coroutine
     def get(self):
         """Run the default **/_system** healthcheck and return it's result."""
         raise HealthCheckOk(additional={'message': 'API running'})
