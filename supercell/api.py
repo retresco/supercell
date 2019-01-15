@@ -19,7 +19,6 @@ from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
 from tornado.gen import coroutine
-async = coroutine
 
 from supercell.cache import CacheConfig
 from supercell.mediatypes import (ContentType, MediaType, Return, Ok, Error,
@@ -37,7 +36,6 @@ from supercell.middleware import Middleware
 
 
 __all__ = [
-    'async',
     'coroutine',
     'consumes',
     'latency',

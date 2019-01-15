@@ -48,7 +48,7 @@ class MyQueryparamHandler(RequestHandler):
         ('docid', IntType(min_value=1, max_value=2, required=False)),
         ('message', StringType(required=True))
     ))
-    @s.async
+    @s.coroutine
     def get(self, *args, **kwargs):
         query = kwargs.get('query')
         raise s.Return(SimpleMessage({"doc_id": query.get('docid', 5),
@@ -62,7 +62,7 @@ class MyQueryparamHandlerWithCustomKwargsName(RequestHandler):
         ('docid', IntType(min_value=1, max_value=2, required=False)),
         ('message', StringType(required=True))
     ), kwargs_name='really_my_name')
-    @s.async
+    @s.coroutine
     def get(self, *args, **kwargs):
         query = kwargs.get('really_my_name')
         raise s.Return(SimpleMessage({"doc_id": query.get('docid', 5),

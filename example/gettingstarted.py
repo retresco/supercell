@@ -46,7 +46,7 @@ class HelloWorld(s.RequestHandler):
     def counter(self, value):
         self.__class__._counter = value
 
-    @s.async
+    @s.coroutine
     def get(self):
         self.counter += 1
         name = self.get_argument('name', self.config.default_name)
