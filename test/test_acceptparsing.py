@@ -53,3 +53,9 @@ class TestParseAcceptHeader(TestCase):
         accept = 'text/*,image/*;application/*;*/*;'
         should = [('*/*', {}, 1.0)]
         self.assertEquals(parse_accept_header(accept), should)
+
+    def test_parse_accept_header_wildcard(self):
+        accept = '*/*'
+        should = [('*/*', {}, 1.0)]
+        self.assertEquals(parse_accept_header(accept), should)
+
