@@ -112,38 +112,28 @@ class ProviderBase(with_metaclass(ProviderMeta, object)):
 
         accept = parse_accept_header(accept_header)
 
-        if len(accept) > 0:
-            for (ctype, params, q) in accept:
-                if ctype not in handler._PROD_CONTENT_TYPES:
-                    continue
+        for (ctype, params, q) in accept:
+            if ctype not in handler._PROD_CONTENT_TYPES:
+                continue
 
+            if ctype == '*/*':
+                if not allow_default:
+                    continue
+                c = handler._PROD_CONTENT_TYPES[ctype][0]
+            else:
                 c = ContentType(ctype, vendor=params.get('vendor', None),
                                 version=params.get('version', None))
-                if c not in handler._PROD_CONTENT_TYPES[ctype]:
-                    continue
 
-                known_types = [t for t in
-                               ProviderMeta.KNOWN_CONTENT_TYPES[ctype]
-                               if t[0] == c]
+            if c not in handler._PROD_CONTENT_TYPES[c.content_type]:
+                continue
 
-                configuration = handler._PROD_CONFIGURATION[ctype]
-                if len(known_types) == 1:
-                    return (known_types[0][1], configuration)
+            known_types = [t for t in
+                           ProviderMeta.KNOWN_CONTENT_TYPES[c.content_type]
+                           if t[0] == c]
 
-            accept_types = [t[0] for t in accept]
-            if len(accept_header) > 0 and '*/*' not in accept_types:
-                raise NoProviderFound()
-
-        if allow_default and 'default' in handler._PROD_CONTENT_TYPES:
-            content_type = handler._PROD_CONTENT_TYPES['default']
-            configuration = handler._PROD_CONFIGURATION['default']
-            ctype = content_type.content_type
-            default_type = [t for t in
-                            ProviderMeta.KNOWN_CONTENT_TYPES[ctype]
-                            if t[0] == content_type]
-
-            if len(default_type) == 1:
-                return (default_type[0][1], configuration)
+            configuration = handler._PROD_CONFIGURATION[ctype]
+            if len(known_types) == 1:
+                return (known_types[0][1], configuration)
 
         raise NoProviderFound()
 
