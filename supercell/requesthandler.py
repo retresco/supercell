@@ -45,7 +45,7 @@ from supercell.utils import escape_contents
 __all__ = ['RequestHandler']
 
 
-_DEFAULT_CONTENT_TYPE = 'DEFAULT'
+_DEFAULT_CONTENT_TYPE = '*/*'
 
 
 def _decode_utf8_and_latin1(value):

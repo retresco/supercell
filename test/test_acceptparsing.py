@@ -46,10 +46,16 @@ class TestParseAcceptHeader(TestCase):
 
     def test_parse_accept_header_really_dumb_client(self):
         accept = ""
-        should = [('', {}, 1.0)]
+        should = [('*/*', {}, 1.0)]
         self.assertEquals(parse_accept_header(accept), should)
 
     def test_iesix_bad_accept_header(self):
         accept = 'text/*,image/*;application/*;*/*;'
-        should = [('', {}, 1.0)]
+        should = [('*/*', {}, 1.0)]
         self.assertEquals(parse_accept_header(accept), should)
+
+    def test_parse_accept_header_wildcard(self):
+        accept = '*/*'
+        should = [('*/*', {}, 1.0)]
+        self.assertEquals(parse_accept_header(accept), should)
+
