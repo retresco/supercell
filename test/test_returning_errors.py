@@ -90,7 +90,7 @@ class MyErrorHandler(RequestHandler):
 @consumes(MediaType.ApplicationJson, SimpleModel)
 class MyWorkingModelHandler(RequestHandler):
 
-    @async
+    @coroutine
     def post(self, model, **kwargs):
         response_model = SimpleModel({'doc_id': 'id', 'doc_bool': True})
         raise Return(response_model)
