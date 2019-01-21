@@ -36,7 +36,7 @@ import json
 from greplin import scales
 from greplin.scales import util
 
-from tornado.gen import coroutine as async
+from tornado.gen import coroutine
 from tornado.web import Application as _TAPP
 
 from supercell.cache import CacheConfigT
@@ -293,7 +293,7 @@ class ScalesSupercellHandler(RequestHandler):
     """Simple handler that returns the available **supercell** stats metrics
     as `json`."""
 
-    @async
+    @coroutine
     def get(self, path):
         """Return the `greplin.scales` stats collected so far."""
         path = path or ''

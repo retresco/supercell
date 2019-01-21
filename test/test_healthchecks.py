@@ -45,14 +45,14 @@ class TestBasicHealthChecks(AsyncHTTPTestCase):
 
 class SimpleHealthCheckExample(s.RequestHandler):
 
-    @s.async
+    @s.coroutine
     def get(self):
         raise s.HealthCheckWarning()
 
 
 class SimpleErrorCheckExample(s.RequestHandler):
 
-    @s.async
+    @s.coroutine
     def get(self):
         raise s.HealthCheckError()
 

@@ -40,7 +40,7 @@ class SimpleMessage(Model):
 class MyHandler(s.RequestHandler):
 
     @s.latency
-    @s.async
+    @s.coroutine
     def get(self, *args, **kwargs):
         future = self._long_method()
         assert future.result() == 'TEST'

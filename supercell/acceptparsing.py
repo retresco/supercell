@@ -32,7 +32,7 @@ def parse_accept_header(accept):
 
     if accept == 'text/*,image/*;application/*;*/*;':
         # strange IE6 Accept header that we ignore
-        return [('', {}, 1.0)]
+        return [('*/*', {}, 1.0)]
 
     for media_range in accept.split(","):
 
@@ -42,7 +42,7 @@ def parse_accept_header(accept):
         # convert vendor-specific content types into something useful (see
         # docstring)
         if media_type.find('/') == -1:
-            result.append(('', {}, 1.0))
+            result.append(('*/*', {}, 1.0))
             continue
         typ, subtyp = media_type.split('/')
         # check for a + in the sub-type

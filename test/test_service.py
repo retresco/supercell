@@ -46,13 +46,13 @@ class SimpleModel(Model):
 @s.consumes(s.MediaType.ApplicationJson, SimpleModel)
 class MyHandler(s.RequestHandler):
 
-    @s.async
+    @s.coroutine
     def get(self):
         self.logger.info('Holy moly')
         self.logger.info('That worked')
         raise s.Return(SimpleModel({"msg": 'Holy moly'}))
 
-    @s.async
+    @s.coroutine
     def post(self, doc_id, model=None):
         self.logger.info('Holy moly')
         raise s.Return(SimpleModel({"msg": 'Holy moly'}))
@@ -64,7 +64,7 @@ class MyHandler(s.RequestHandler):
 @s.provides(s.MediaType.ApplicationJson, default=True)
 class MyHandlerThrowingExceptions(s.RequestHandler):
 
-    @s.async
+    @s.coroutine
     def get(self):
         self.logger.info('Starting request with unhandled exception')
         raise Exception()

@@ -49,7 +49,7 @@ class SimpleMessage(Model):
 @provides(s.MediaType.ApplicationJson)
 class MyHandler(RequestHandler):
 
-    @s.async
+    @s.coroutine
     def get(self, *args, **kwargs):
         raise s.Return(SimpleMessage({"doc_id": 'test123',
                                       "message": 'A test'}))
@@ -58,7 +58,7 @@ class MyHandler(RequestHandler):
 @provides(s.MediaType.ApplicationJson, default=True)
 class MyHandlerWithDefault(RequestHandler):
 
-    @s.async
+    @s.coroutine
     def get(self, *args, **kwargs):
         raise s.Return(SimpleMessage({"doc_id": 'test123',
                                       "message": 'A test'}))
@@ -67,24 +67,24 @@ class MyHandlerWithDefault(RequestHandler):
 @consumes(s.MediaType.ApplicationJson, SimpleMessage)
 class MyEchoHandler(RequestHandler):
 
-    @s.async
+    @s.coroutine
     def get(self, *args, **kwargs):
         q = self.get_argument('q')
         # query solr:
         raise s.Return(SimpleMessage({"doc_id": 'test456',
                                       "message": 'q: %s' % q}))
 
-    @s.async
+    @s.coroutine
     def post(self, *args, **kwargs):
         # do something with model
         raise s.OkCreated({'docid': 123})
 
-    @s.async
+    @s.coroutine
     def patch(self, *args, **kwargs):
         # do something with model
         raise s.Ok()
 
-    @s.async
+    @s.coroutine
     def delete(self, *args, **kwargs):
         raise s.NoContent()
 
@@ -166,7 +166,7 @@ class TestSimpleRequestHandler(AsyncHTTPTestCase):
 @provides(s.MediaType.ApplicationJson, default=True)
 class EncodingTestingHandler(s.RequestHandler):
 
-    @s.async
+    @s.coroutine
     def get(self, *args, **kwargs):
         json_args = json.dumps(args)
         json_kwargs = json.dumps(kwargs)
@@ -212,7 +212,7 @@ class TestSimpleHtmlHandler(AsyncHTTPTestCase):
             def get_template(self, model):
                 return 'test.html'
 
-            @s.async
+            @s.coroutine
             def get(self, *args, **kwargs):
                 r = SimpleMessage({'doc_id': 'test123',
                                    'message': 'bliblablup'})
@@ -241,7 +241,7 @@ class TestSimpleHtmlHandlerWithMissingTemplate(AsyncHTTPTestCase):
         @provides(s.MediaType.TextHtml, default=True)
         class SimpleHtmlHandler(s.RequestHandler):
 
-            @s.async
+            @s.coroutine
             def get(self, *args, **kwargs):
                 r = SimpleMessage({'doc_id': 'test123',
                                    'message': 'args=%s; kwargs=%s' % (args,
@@ -280,21 +280,21 @@ class TestHandlerProvidingPartialModels(AsyncHTTPTestCase):
         @provides(s.MediaType.ApplicationJson)
         class MyHandlerWithoutPartial(RequestHandler):
 
-            @s.async
+            @s.coroutine
             def get(self, *args, **kwargs):
                 raise s.Return(StricterMessage({"doc_id": 'test123'}))
 
         @provides(s.MediaType.ApplicationJson, partial=True)
         class MyHandlerWithPartial(RequestHandler):
 
-            @s.async
+            @s.coroutine
             def get(self, *args, **kwargs):
                 raise s.Return(StricterMessage({"doc_id": 'test123'}))
 
         @provides(s.MediaType.ApplicationJson, partial=True)
         class MyHandlerWithPartialComplex(RequestHandler):
 
-            @s.async
+            @s.coroutine
             def get(self, *args, **kwargs):
                 raise s.Return(StricterMessageCollection(
                     {"messages": [{"doc_id": 'test123'}]}))
@@ -354,7 +354,7 @@ class TestLoadModelFromArguments(AsyncHTTPTestCase):
         @provides(s.MediaType.ApplicationJson, default=True)
         class MyHandler(RequestHandler):
 
-            @s.async
+            @s.coroutine
             def get(self, *args, **kwargs):
                 model = self.load_model_from_arguments(
                     SimpleModel, name="default")

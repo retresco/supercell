@@ -74,8 +74,8 @@ def provides(content_type, vendor=None, version=None, default=False,
         cls._PROD_CONFIGURATION[content_type]['partial'] = partial
         if default:
             assert 'default' not in cls._PROD_CONTENT_TYPES, 'TODO: nice msg'
-            cls._PROD_CONTENT_TYPES['default'] = ctype
-            cls._PROD_CONFIGURATION['default']['partial'] = partial
+            cls._PROD_CONTENT_TYPES['*/*'] = [ctype]
+            cls._PROD_CONFIGURATION['*/*']['partial'] = partial
 
         return cls
 
