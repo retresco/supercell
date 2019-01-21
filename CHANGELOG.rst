@@ -1,3 +1,31 @@
+0.8.3 - (January 21, 2019)
+-------------------------
+
+New Features
+~~~~~~~~~~~~
+
+* introduced Python 3.7 compatibility
+
+Bugfixes / Improvements
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* return default content-type for wild-card accept type (`*.*`) instead
+  of raising a 406 HTTP response status
+
+
+Development Changes
+~~~~~~~~~~~~~~~~~~~
+
+* renamed the `async` decorator form supercell.api to `coroutine` because
+  async will be a reserved keyword in Python 3.7
+
+
+Migration
+~~~~~~~~~
+
+* rename all occurrences of `supercell.api.async` to `supercell.api.coroutine`
+
+
 0.8.2 - (January 8, 2019)
 -------------------------
 
