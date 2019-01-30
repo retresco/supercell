@@ -1,3 +1,16 @@
+0.8.4 - (January 30, 2019)
+-------------------------
+
+New Features
+~~~~~~~~~~~~
+
+* official Python 3.7 support
+
+Bugfixes / Improvements
+~~~~~~~~~~~~~~~~~~~~~~~
+
+* require pytest-cov < 2.6.0 to ensure that travis CI pipeline works
+
 0.8.3 - (January 21, 2019)
 -------------------------
 
