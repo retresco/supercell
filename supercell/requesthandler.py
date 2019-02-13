@@ -141,10 +141,13 @@ class RequestHandler(rq):
         if verb in ['patch', 'post', 'put'] and 'Content-Type' in headers:
             # try to find a matching consumer
             try:
-                (model, consumer_class) = ConsumerBase.map_consumer(
-                    headers['Content-Type'], self)
+                ((model_type, validate), consumer_class) = \
+                    ConsumerBase.map_consumer(headers['Content-Type'], self)
                 consumer = consumer_class()
-                kwargs['model'] = consumer.consume(self, model)
+                model = consumer.consume(self, model_type)
+                if validate:
+                    model.validate()
+                kwargs['model'] = model
             except NoConsumerFound:
                 # TODO return available consumer types?!
                 raise HTTPError(400, reason='Content-Type not supported.')

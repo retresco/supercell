@@ -42,6 +42,11 @@ if PY2:
     extras_require['futures'] = 'futures == 2.2.0'
 
 
+def readme():
+    with open('README.rst') as f:
+        return f.read()
+
+
 setup(
     name='supercell',
     version=init.__version__,
@@ -53,6 +58,7 @@ setup(
 
     description='Supercell is a framework for creating RESTful APIs that ' +
                 'loosely follow the idea of domain driven design.',
+    long_description=readme(),
     packages=['supercell'],
 
     install_requires=[

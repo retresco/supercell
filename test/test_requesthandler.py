@@ -65,6 +65,7 @@ class MyHandlerWithDefault(RequestHandler):
 
 
 @consumes(s.MediaType.ApplicationJson, SimpleMessage)
+@provides(s.MediaType.ApplicationJson, default=True)
 class MyEchoHandler(RequestHandler):
 
     @s.coroutine
@@ -139,6 +140,11 @@ class TestSimpleRequestHandler(AsyncHTTPTestCase):
                                        s.MediaType.ApplicationJson},
                               body='{"number": "one"}')
         self.assertEqual(response.code, 400)
+        body = json.loads(response.body.decode('utf8'))
+        self.assertEqual(body, {
+            'error': True,
+            'message': {'number': ["Value 'one' is not int."]}
+        })
 
     def test_patch_handler(self):
         response = self.fetch('/test_echo', method='PATCH',
@@ -154,9 +160,14 @@ class TestSimpleRequestHandler(AsyncHTTPTestCase):
         response = self.fetch('/test_echo', method='PATCH',
                               headers={'Content-Type':
                                        s.MediaType.ApplicationJson},
-                              body='{"number": one}'
+                              body='{"number": "one"}'
                               )
         self.assertEqual(response.code, 400)
+        body = json.loads(response.body.decode('utf8'))
+        self.assertEqual(body, {
+            'error': True,
+            'message': {'number': ["Value 'one' is not int."]}
+        })
 
     def test_delete(self):
         response = self.fetch('/test_echo', method='DELETE')

@@ -1,3 +1,23 @@
+0.9.0 - (February 13, 2019)
+-------------------------
+
+New Features
+~~~~~~~~~~~~
+
+* added a flag `validate` to the consumer decorator
+  `supercell.decorators.consumes` that is True by default and controls whether
+  the input model is validated
+* introduced new command line argument `--logformat` to customize the logging
+  format, the default logging format was changed to:
+  `%(asctime)s [%(levelname)s] %(hostname)s %(name)s: %(message)s`
+
+Migration
+~~~~~~~~~
+
+* set the `validate` flag of the `supercell.decorators.consumes` decorator to
+  False in case input model validation should not be done before passing the
+  model to the handler
+
 0.8.4 - (January 30, 2019)
 -------------------------
 
