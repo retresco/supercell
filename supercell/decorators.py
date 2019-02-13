@@ -82,7 +82,7 @@ def provides(content_type, vendor=None, version=None, default=False,
     return wrapper
 
 
-def consumes(content_type, model, vendor=None, version=None):
+def consumes(content_type, model, vendor=None, version=None, validate=True):
     """Class decorator for mapping HTTP POST and PUT bodies to
 
     Example::
@@ -99,6 +99,7 @@ def consumes(content_type, model, vendor=None, version=None):
     :type model: :class:`schematics.models.Model`
     :param str vendor: Any vendor information for the base content type
     :param float version: The vendor version
+    :param bool validate: Whether to validate the consumed model
     """
 
     def wrapper(cls):
@@ -115,7 +116,7 @@ def consumes(content_type, model, vendor=None, version=None):
 
         ct = ContentType(content_type, vendor, version)
         cls._CONS_CONTENT_TYPES[content_type].append(ct)
-        cls._CONS_MODEL[ct] = model
+        cls._CONS_MODEL[ct] = (model, validate)
         return cls
 
     return wrapper

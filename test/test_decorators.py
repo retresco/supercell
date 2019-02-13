@@ -61,7 +61,7 @@ class TestConsumesDecorator(TestCase):
                          MediaType.ApplicationJson)
         self.assertIsNone(content_type.vendor)
         self.assertIsNone(content_type.version)
-        self.assertEqual(MyHandler._CONS_MODEL[content_type], object)
+        self.assertEqual(MyHandler._CONS_MODEL[content_type], (object, True))
 
     def test_consumes_decorator_with_vendor_info(self):
 
@@ -82,11 +82,11 @@ class TestConsumesDecorator(TestCase):
                          MediaType.ApplicationJson)
         self.assertEqual(content_type.vendor, 'ficture.light')
         self.assertEqual(content_type.version, 1.0)
-        self.assertEqual(MyHandler._CONS_MODEL[content_type], object)
+        self.assertEqual(MyHandler._CONS_MODEL[content_type], (object, True))
 
     def test_consumes_decorator_with_model(self):
 
-        @consumes(MediaType.ApplicationJson, object)
+        @consumes(MediaType.ApplicationJson, object, validate=False)
         class MyHandler(RequestHandler):
 
             def post(self):
@@ -102,7 +102,7 @@ class TestConsumesDecorator(TestCase):
                          MediaType.ApplicationJson)
         self.assertIsNone(content_type.vendor)
         self.assertIsNone(content_type.version)
-        self.assertEqual(MyHandler._CONS_MODEL[content_type], object)
+        self.assertEqual(MyHandler._CONS_MODEL[content_type], (object, False))
 
 
 class TestProvidesDecorator(TestCase):
