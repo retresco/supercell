@@ -27,7 +27,7 @@ import inspect
 from schematics.models import Model
 from schematics.types.compound import ListType
 from schematics.exceptions import BaseError
-from tornado import gen, iostream
+from tornado import gen, iostream, httputil
 from tornado.concurrent import is_future
 from tornado.escape import to_unicode
 from tornado.util import bytes_type, unicode_type
@@ -170,6 +170,22 @@ class RequestHandler(rq):
             expires = self.environment.get_expires_info(self.__class__)
             if expires:
                 self.set_header('Expires', datetime.now() + expires)
+
+    def clear(self):
+        """
+        Resets all headers and content for this response.
+        In contrast to tornado, we don't include the server version in the
+        header.
+        """
+        self._headers = httputil.HTTPHeaders({
+            "Server": "Supercell",
+            "Content-Type": "text/html; charset=UTF-8",
+            "Date": httputil.format_timestamp(time.time()),
+        })
+        self.set_default_headers()
+        self._write_buffer = []
+        self._status_code = 200
+        self._reason = httputil.responses[200]
 
     @gen.coroutine
     def prepare(self):
