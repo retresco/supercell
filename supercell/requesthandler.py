@@ -27,7 +27,7 @@ import inspect
 from schematics.models import Model
 from schematics.types.compound import ListType
 from schematics.exceptions import BaseError
-from tornado import gen, iostream, httputil
+from tornado import gen, iostream
 from tornado.concurrent import is_future
 from tornado.escape import to_unicode
 from tornado.util import bytes_type, unicode_type
