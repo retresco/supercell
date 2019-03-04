@@ -171,21 +171,8 @@ class RequestHandler(rq):
             if expires:
                 self.set_header('Expires', datetime.now() + expires)
 
-    def clear(self):
-        """
-        Resets all headers and content for this response.
-        In contrast to tornado, we don't include the server version in the
-        header.
-        """
-        self._headers = httputil.HTTPHeaders({
-            "Server": "Supercell",
-            "Content-Type": "text/html; charset=UTF-8",
-            "Date": httputil.format_timestamp(time.time()),
-        })
-        self.set_default_headers()
-        self._write_buffer = []
-        self._status_code = 200
-        self._reason = httputil.responses[200]
+    def set_default_headers(self):
+        self.set_header("Server", "Supercell")
 
     @gen.coroutine
     def prepare(self):
