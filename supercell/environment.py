@@ -31,17 +31,11 @@ from __future__ import (absolute_import, division, print_function,
 
 from collections import namedtuple
 from datetime import timedelta
-import json
 
-from greplin import scales
-from greplin.scales import util
-
-from tornado.gen import coroutine
 from tornado.web import Application as _TAPP
 
 from supercell.cache import CacheConfigT
 from supercell.health import SystemHealthCheck
-from supercell.requesthandler import RequestHandler
 
 __all__ = ['Environment']
 
@@ -236,10 +230,6 @@ class Environment(object):
             self._app = Application(self, config,
                                     **self.tornado_settings)
 
-            # add the stats handler
-            self._app.add_handlers('.*', [('/_system/stats(.*)',
-                                          ScalesSupercellHandler)])
-
             # add the default health check
             self._app.add_handlers('.*', [('/_system/check',
                                            SystemHealthCheck)])
@@ -287,22 +277,3 @@ class Environment(object):
             self._config_name = '%s_%s.cfg' % (getpass.getuser(),
                                                socket.gethostname())
         return self._config_name
-
-
-class ScalesSupercellHandler(RequestHandler):
-    """Simple handler that returns the available **supercell** stats metrics
-    as `json`."""
-
-    @coroutine
-    def get(self, path):
-        """Return the `greplin.scales` stats collected so far."""
-        path = path or ''
-        path = path.lstrip('/')
-        parts = path.split('/')
-        if not parts[0]:
-            parts = parts[1:]
-        statDict = util.lookup(scales.getStats(), parts)
-
-        serialized = json.dumps(statDict, cls=scales.StatContainerEncoder)
-        self.set_header('Content-Type', 'application/json')
-        self.finish(serialized)
