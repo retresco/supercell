@@ -62,9 +62,8 @@ setup(
     packages=['supercell'],
 
     install_requires=[
-        'tornado',
-        'schematics',
-        'scales'
+        'tornado >=4.2.1, <6',
+        'schematics >= 1.1.1'
     ],
 
     tests_require=tests_require,

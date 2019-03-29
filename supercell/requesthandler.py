@@ -171,6 +171,9 @@ class RequestHandler(rq):
             if expires:
                 self.set_header('Expires', datetime.now() + expires)
 
+    def set_default_headers(self):
+        self.set_header("Server", "Supercell")
+
     @gen.coroutine
     def prepare(self):
         """Check for a consumer and optionally add the cache headers.

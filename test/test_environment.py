@@ -42,7 +42,7 @@ class EnvironmentTest(TestCase):
         if tornado.version < '4.5':
             self.assertEqual(len(app.handlers), 2)
         else:
-            self.assertEqual(len(app.default_router.rules), 3)
+            self.assertEqual(len(app.default_router.rules), 2)
 
     def test_config_file_paths(self):
         env = Environment()

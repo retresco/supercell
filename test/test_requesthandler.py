@@ -173,6 +173,11 @@ class TestSimpleRequestHandler(AsyncHTTPTestCase):
         response = self.fetch('/test_echo', method='DELETE')
         self.assertEqual(response.code, 204)
 
+    def test_response_headers(self):
+        response = self.fetch('/test_echo', method='GET')
+        headers = response.headers
+        self.assertEqual(headers['Server'], 'Supercell')
+
 
 @provides(s.MediaType.ApplicationJson, default=True)
 class EncodingTestingHandler(s.RequestHandler):
