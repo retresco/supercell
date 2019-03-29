@@ -1,3 +1,14 @@
+0.10.0 - (March 29, 2019)
+-------------------------
+
+Development Changes
+~~~~~~~~~~~~~~~~~~~
+
+* removed statistics collection logic and default statistics
+  handler (`/_system/stats`)
+* set the Server header to `Supercell` (was `TornadoServer` and tornado version
+  before)
+
 0.9.0 - (February 13, 2019)
 -------------------------
 
