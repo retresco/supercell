@@ -19,7 +19,7 @@ variables:
     - make install
     - make test
     - set +e
-    - 'env/bin/pylint supercell --jobs=0 --reports=no --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" > pylint-report.txt'
+    - 'env/bin/pylint supercell --jobs=1 --reports=no --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" > pylint-report.txt'
     - cat pylint-report.txt
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
 
