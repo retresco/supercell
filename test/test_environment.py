@@ -19,12 +19,8 @@ from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
 import sys
-if sys.version_info > (2, 7):
-    from unittest import TestCase
-    from unittest import skipIf
-else:
-    from unittest2 import TestCase
-    from unittest2 import skipIf
+from unittest import TestCase
+from unittest import skipIf
 
 import tornado
 from tornado import httputil

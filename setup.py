@@ -31,9 +31,6 @@ tests_require = [
     'pytest-cov'
 ]
 
-if sys.version_info < (2, 7):
-    tests_require.append('unittest2')
-
 
 extras_require = {}
 extras_require['test'] = tests_require
