@@ -31,9 +31,6 @@ tests_require = [
     'pytest-cov'
 ]
 
-if sys.version_info < (2, 7):
-    tests_require.append('unittest2')
-
 
 extras_require = {}
 extras_require['test'] = tests_require
@@ -72,6 +69,7 @@ setup(
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.4',
