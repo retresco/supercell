@@ -15,7 +15,12 @@
 # limitations under the License.
 #
 #
-from cgi import escape
+
+try:
+    from html import escape
+except:
+    # for Python < 3.2
+    from cgi import escape
 
 from supercell._compat import string_types, text_type
 
@@ -29,7 +34,7 @@ def escape_contents(o):
     """
     _e = escape_contents
     if isinstance(o, string_types):
-        return escape(text_type(o))
+        return escape(text_type(o), quote=False)
     elif isinstance(o, dict):
         o = dict([(_e(k), _e(o[k])) for k in o])
     elif isinstance(o, list):

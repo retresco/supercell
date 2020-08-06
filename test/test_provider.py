@@ -19,10 +19,7 @@ from __future__ import (absolute_import, division, print_function,
                         with_statement)
 
 import sys
-if sys.version_info > (2, 7):
-    from unittest import TestCase
-else:
-    from unittest2 import TestCase
+from unittest import TestCase
 
 from supercell.api import provides, RequestHandler
 from supercell.mediatypes import ContentType, MediaType

@@ -19,7 +19,7 @@ variables:
     - make install
     - make test
     - set +e
-    - 'env/bin/pylint supercell --jobs=0 --reports=no --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" > pylint-report.txt'
+    - 'env/bin/pylint supercell --jobs=1 --reports=no --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" > pylint-report.txt'
     - cat pylint-report.txt
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
 
@@ -58,6 +58,10 @@ test:37:
   image: python:3.7
   <<: *test_template
 
+test:38:
+  image: python:3.8
+  <<: *test_template
+
 sonar:27:
   <<: *sonar_template
   dependencies:
@@ -78,3 +82,10 @@ sonar:37:
     - test:37
   variables:
     projectKey: supercell-37
+
+sonar:38:
+  <<: *sonar_template
+  dependencies:
+    - test:38
+  variables:
+    projectKey: supercell-38
