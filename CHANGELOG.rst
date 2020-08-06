@@ -1,3 +1,16 @@
+0.11.0 - (August 06, 2020)
+-------------------------
+
+New Features
+~~~~~~~~~~~~
+
+* support of Python 3.8
+
+Development Changes
+~~~~~~~~~~~~~~~~~~~
+
+* use `html.escape` instead of `cgi.escape` if available
+
 0.10.0 - (March 29, 2019)
 -------------------------
 
