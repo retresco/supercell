@@ -66,14 +66,6 @@ test:39:
   image: python:3.9
   <<: *test_template
 
-test:310:
-  image: python:3.10
-  <<: *test_template
-
-test:311:
-  image: python:3.11
-  <<: *test_template
-
 sonar:27:
   <<: *sonar_template
   dependencies:
@@ -108,17 +100,3 @@ sonar:39:
     - test:39
   variables:
     projectKey: supercell-39
-
-sonar:310:
-  <<: *sonar_template
-  dependencies:
-    - test:39
-  variables:
-    projectKey: supercell-310
-
-sonar:311:
-  <<: *sonar_template
-  dependencies:
-    - test:39
-  variables:
-    projectKey: supercell-311

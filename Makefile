@@ -39,7 +39,7 @@ test3:
 .PHONY: virtualenv3
 virtualenv3:
 	if [ ! -e ${PIP3} ]; then \
-	${VIRTUALENV} -p python3.11 ${VIRTUALENV_DIR3}; \
+	${VIRTUALENV} -p python3.9 ${VIRTUALENV_DIR3}; \
 	fi
 	${PIP3} install --upgrade pip
 
