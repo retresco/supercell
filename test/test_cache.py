@@ -68,18 +68,12 @@ class CachingWithYielding(RequestHandler):
     def get(self, *args, **kwargs):
         result = yield self.a_coroutine()
         assert result, 'yes'
-        #result = yield gen.Task(self.an_engine)
-        #assert result, 'yes again'
         raise s.Return(SimpleMessage({"doc_id": 'test123',
                                       "message": 'A test'}))
 
     @gen.coroutine
     def a_coroutine(self):
         raise s.Return('yes')
-
-    # @gen.engine
-    # def an_engine(self, callback=None):
-    #     callback('yes again')
 
 
 @provides(s.MediaType.ApplicationJson, default=True)
