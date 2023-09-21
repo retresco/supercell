@@ -34,31 +34,18 @@ PYPY = hasattr(sys, 'pypy_translation_info')
 _identity = lambda x: x
 
 
-if not PY2:
-    unichr = chr
-    range_type = range
-    text_type = str
-    string_types = (str,)
+unichr = chr
+range_type = range
+text_type = str
+string_types = (str,)
 
-    iterkeys = lambda d: iter(d.keys())
-    itervalues = lambda d: iter(d.values())
-    iteritems = lambda d: iter(d.items())
+iterkeys = lambda d: iter(d.keys())
+itervalues = lambda d: iter(d.values())
+iteritems = lambda d: iter(d.items())
 
-    ifilter = filter
-    imap = map
-    izip = zip
-
-else:
-    unichr = chr
-    range_type = xrange
-    text_type = unicode
-    string_types = (str, unicode)
-
-    iterkeys = lambda d: d.iterkeys()
-    itervalues = lambda d: d.itervalues()
-    iteritems = lambda d: d.iteritems()
-
-    from itertools import imap, izip, ifilter
+ifilter = filter
+imap = map
+izip = zip
 
 
 def with_metaclass(meta, *bases):

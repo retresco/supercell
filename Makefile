@@ -39,7 +39,7 @@ test3:
 .PHONY: virtualenv3
 virtualenv3:
 	if [ ! -e ${PIP3} ]; then \
-	${VIRTUALENV} -p python3.6 ${VIRTUALENV_DIR3}; \
+	${VIRTUALENV} -p python3.11 ${VIRTUALENV_DIR3}; \
 	fi
 	${PIP3} install --upgrade pip
 
@@ -48,30 +48,6 @@ install3: virtualenv3
 	${PIP3} install -r requirements.txt;
 	${PYTHON3} setup.py develop;
 	${PIP3} install -r requirements-test.txt;
-
-
-####################################################
-# python 2
-VIRTUALENV_DIR2=${PWD}/env2
-PIP2=${VIRTUALENV_DIR2}/bin/pip
-PYTHON2=${VIRTUALENV_DIR2}/bin/python
-
-.PHONY: test2
-test2:
-	${VIRTUALENV_DIR2}/bin/py.test -vvrw ${TEST} --cov ${SRCDIR} --cov-report=term:skip-covered --cov-report=xml:coverage.xml
-
-.PHONY: virtualenv2
-virtualenv2:
-	if [ ! -e ${PIP2} ]; then \
-	${VIRTUALENV} -p python2.7 ${VIRTUALENV_DIR2}; \
-	fi
-	${PIP2} install --upgrade pip
-
-.PHONY: install2
-install2: virtualenv2
-	${PIP2} install -r requirements.txt;
-	${PYTHON2} setup.py develop;
-	${PIP2} install -r requirements-test.txt;
 
 
 ####################################################
