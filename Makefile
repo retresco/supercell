@@ -25,31 +25,6 @@ install: virtualenv
 	${PYTHON} setup.py develop;
 	${PIP} install -r requirements-test.txt;
 
-
-####################################################
-# python 3
-VIRTUALENV_DIR3=${PWD}/env3
-PIP3=${VIRTUALENV_DIR3}/bin/pip
-PYTHON3=${VIRTUALENV_DIR3}/bin/python
-
-.PHONY: test3
-test3:
-	${VIRTUALENV_DIR3}/bin/py.test -vvrw ${TEST} --cov ${SRCDIR} --cov-report=term:skip-covered --cov-report=xml:coverage.xml
-
-.PHONY: virtualenv3
-virtualenv3:
-	if [ ! -e ${PIP3} ]; then \
-	${VIRTUALENV} -p python3.9 ${VIRTUALENV_DIR3}; \
-	fi
-	${PIP3} install --upgrade pip
-
-.PHONY: install3
-install3: virtualenv3
-	${PIP3} install -r requirements.txt;
-	${PYTHON3} setup.py develop;
-	${PIP3} install -r requirements-test.txt;
-
-
 ####################################################
 .PHONY: clean
 clean:

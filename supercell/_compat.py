@@ -23,29 +23,12 @@ http://lucumr.pocoo.org/2013/5/21/porting-to-python-3-redux/
 
 Also provides a schematics 1.1.1 compatibility helper.
 """
-import sys
-
-__all__ = ['unichr', 'range_type', 'text_type', 'string_types', 'iterkeys',
-           'itervalues', 'iteritems', 'imap', 'izip', 'ifilter']
 
 
-PY2 = sys.version_info[0] == 2
-PYPY = hasattr(sys, 'pypy_translation_info')
-_identity = lambda x: x
+__all__ = ['text_type', 'string_types']
 
-
-unichr = chr
-range_type = range
 text_type = str
 string_types = (str,)
-
-iterkeys = lambda d: iter(d.keys())
-itervalues = lambda d: iter(d.values())
-iteritems = lambda d: iter(d.items())
-
-ifilter = filter
-imap = map
-izip = zip
 
 
 def with_metaclass(meta, *bases):
