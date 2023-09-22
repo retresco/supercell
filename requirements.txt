@@ -1,2 +1,2 @@
-tornado >=4.2.1,<6
+tornado >=4.2.1,<6.3
 schematics >= 1.1.1
