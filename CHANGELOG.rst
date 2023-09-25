@@ -1,3 +1,17 @@
+0.12.0 - (September 25, 2023)
+-------------------------
+
+New Features
+~~~~~~~~~~~~
+
+* support of Python 3.9
+* support of tornado < 6.3
+
+Development Changes
+~~~~~~~~~~~~~~~~~~~
+
+* removal of Python 2 support
+
 0.11.0 - (August 06, 2020)
 -------------------------
 
