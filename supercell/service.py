@@ -115,7 +115,7 @@ class Service(object):
 
         if with_signals:
             def sig_handler(sig, frame):
-                IOLoop.current().add_callback(self.shutdown)    # noqa
+                IOLoop.current().add_callback_from_signal(self.shutdown)    # noqa
             signal.signal(signal.SIGTERM, sig_handler)
             signal.signal(signal.SIGINT, sig_handler)
 

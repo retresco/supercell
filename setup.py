@@ -59,7 +59,7 @@ setup(
     packages=['supercell'],
 
     install_requires=[
-        'tornado >=4.2.1, <6',
+        'tornado >=4.2.1, <6.3',
         'schematics >= 1.1.1'
     ],
 
@@ -69,6 +69,7 @@ setup(
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
+        'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.6',

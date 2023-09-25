@@ -46,10 +46,6 @@ stages:
   - test
   - sonar
 
-test:27:
-  image: python:2.7
-  <<: *test_template
-
 test:36:
   image: python:3.6
   <<: *test_template
@@ -62,12 +58,9 @@ test:38:
   image: python:3.8
   <<: *test_template
 
-sonar:27:
-  <<: *sonar_template
-  dependencies:
-    - test:27
-  variables:
-    projectKey: supercell-27
+test:39:
+  image: python:3.9
+  <<: *test_template
 
 sonar:36:
   <<: *sonar_template
@@ -89,3 +82,10 @@ sonar:38:
     - test:38
   variables:
     projectKey: supercell-38
+
+sonar:39:
+  <<: *sonar_template
+  dependencies:
+    - test:39
+  variables:
+    projectKey: supercell-39
