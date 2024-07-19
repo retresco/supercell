@@ -9,7 +9,7 @@ all: virtualenv install
 
 .PHONY: virtualenv
 virtualenv:
-	if [ ! -e ${PIP} ]; then python3.6 -m venv ${VIRTUALENV_DIR}; fi
+	if [ ! -e ${PIP} ]; then python3 -m venv ${VIRTUALENV_DIR}; fi
 	${PIP} install --upgrade pip
 
 .PHONY: install
