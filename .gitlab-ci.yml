@@ -12,9 +12,6 @@ variables:
     paths:
       - coverage.xml
       - pylint-report.txt
-  before_script:
-    - pip install virtualenv
-    - virtualenv env
   script:
     - make install
     - make test
