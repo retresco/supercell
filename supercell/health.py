@@ -1,4 +1,3 @@
-# vim: set fileencoding=utf-8 :
 #
 # Copyright (c) 2013 Daniel Truemper <truemped at googlemail.com>
 #
@@ -15,6 +14,7 @@
 # limitations under the License.
 #
 #
+
 """Health checks provide a way for the hoster to check if the application is
 still running and working as expected.
 
@@ -63,8 +63,6 @@ and an error a similar one::
     $ curl 'http://127.0.0.1/_system/check/http_resource_with_warning'
     {"code": "ERROR", "error": true}
 """
-from __future__ import (absolute_import, division, print_function,
-                        with_statement)
 
 from tornado.gen import coroutine
 
@@ -81,7 +79,7 @@ class HealthCheckOk(Ok):
         """Initialize the health checks response."""
         additional = additional or {}
         additional['code'] = 'OK'
-        super(HealthCheckOk, self).__init__(code=200, additional=additional)
+        super().__init__(code=200, additional=additional)
 
 
 class HealthCheckWarning(Error):
@@ -96,8 +94,7 @@ class HealthCheckWarning(Error):
         """Initialize the health checks response."""
         additional = additional or {}
         additional['code'] = 'WARNING'
-        super(HealthCheckWarning, self).__init__(code=500,
-                                                 additional=additional)
+        super().__init__(code=500, additional=additional)
 
 
 class HealthCheckError(Error):
@@ -111,8 +108,7 @@ class HealthCheckError(Error):
         """Initialize the health checks response."""
         additional = additional or {}
         additional['code'] = 'ERROR'
-        super(HealthCheckError, self).__init__(code=500,
-                                               additional=additional)
+        super().__init__(code=500, additional=additional)
 
 
 @provides(MediaType.ApplicationJson, default=True)

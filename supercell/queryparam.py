@@ -1,4 +1,3 @@
-# vim: set fileencoding=utf-8 :
 #
 # Copyright (c) 2014 Daniel Truemper <truemped at googlemail.com>
 #
@@ -16,8 +15,6 @@
 #
 #
 """Simple decorator for dealing with typed query parameters."""
-from __future__ import (absolute_import, division, print_function,
-                        with_statement)
 
 from schematics.exceptions import ConversionError, ValidationError
 
@@ -66,7 +63,7 @@ class QueryParams(s.Middleware):
     """
 
     def __init__(self, params, kwargs_name='query'):
-        super(QueryParams, self).__init__()
+        super().__init__()
         self.params = params
         self.kwargs_name = kwargs_name
 

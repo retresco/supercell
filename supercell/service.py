@@ -1,4 +1,3 @@
-# vim: set fileencoding=utf-8 :
 #
 # Copyright (c) 2013 Daniel Truemper <truemped at googlemail.com>
 #
@@ -15,13 +14,12 @@
 # limitations under the License.
 #
 #
+
 """A :class:`Service` is the main element of a `supercell` application. It will
 instanciate the :class:`supercell.api.Environment` and parse the configuration
 files as well as the command line. In the final step the
 :class:`tornado.web.Application` is created and bound to a socket.
 """
-from __future__ import (absolute_import, division, print_function,
-                        with_statement)
 
 import logging
 from logging import StreamHandler
@@ -83,7 +81,7 @@ define('show_config', default=False,
        help='Show the effective configuration')
 
 
-class Service(object):
+class Service:
     """Main service implementation managing the
     :class:`tornado.web.Application` and taking care of configuration."""
 

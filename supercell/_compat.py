@@ -1,4 +1,3 @@
-# vim: set fileencoding=utf-8 :
 #
 # Copyright (c) 2013 Daniel Truemper <truemped at googlemail.com>
 #
@@ -15,20 +14,15 @@
 # limitations under the License.
 #
 #
+
 """
-Python 2.6/2.7/3.3 compatibility module.
+Compatibility module.
 
 Heavily inspired by jinja2 and
 http://lucumr.pocoo.org/2013/5/21/porting-to-python-3-redux/
 
 Also provides a schematics 1.1.1 compatibility helper.
 """
-
-
-__all__ = ['text_type', 'string_types']
-
-text_type = str
-string_types = (str,)
 
 
 def with_metaclass(meta, *bases):
