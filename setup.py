@@ -14,9 +14,8 @@
 # limitations under the License.
 #
 #
-import os
+
 from setuptools import setup
-import sys
 
 from supercell.version import __version__
 
