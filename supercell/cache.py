@@ -1,4 +1,3 @@
-# vim: set fileencoding=utf-8 :
 #
 # Copyright (c) 2013 Daniel Truemper <truemped at googlemail.com>
 #
@@ -15,6 +14,7 @@
 # limitations under the License.
 #
 #
+
 """Helpers for dealing with HTTP level caching.
 
 The `Cache-Control` and `Expires` header can be defined while adding a handler
@@ -33,8 +33,6 @@ The details of setting the `CacheControl` header are documented in the
 :func:`datetime.timedelta` as input and will then generate the `Expires` header
 based on the current time and the :func:`datetime.timedelta`.
 """
-from __future__ import (absolute_import, division, print_function,
-                        with_statement)
 
 from collections import namedtuple
 

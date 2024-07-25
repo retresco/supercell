@@ -1,7 +1,7 @@
 variables:
   PIP_CACHE_DIR: "${CI_PROJECT_DIR}/.cache/pip"
 
-.test_template: &test_template
+.test_template:
   stage: test
   cache:
     key: ${CI_JOB_NAME}
@@ -12,9 +12,6 @@ variables:
     paths:
       - coverage.xml
       - pylint-report.txt
-  before_script:
-    - pip install virtualenv
-    - virtualenv env
   script:
     - make install
     - make test
@@ -23,12 +20,12 @@ variables:
     - cat pylint-report.txt
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
 
-.sonar_template: &sonar_template
+.sonar_template:
   stage: sonar
   image: ciricihq/gitlab-sonar-scanner
   before_script:
     - export SONAR_ANALYSIS_MODE=publish
-    - projectVersion=$(awk -F\" '/^__version__ = / {print $2}' supercell/__init__.py)
+    - projectVersion=$(awk -F\" '/^__version__ = / {print $2}' supercell/version.py)
     - echo sonar.projectVersion=${projectVersion} >> sonar-project.properties
     - echo "sonar.projectKey=RTR:${projectKey}" >> sonar-project.properties
     - 'echo "sonar.projectName=Python :: ${projectKey}" >> sonar-project.properties'
@@ -47,45 +44,78 @@ stages:
   - sonar
 
 test:36:
+  extends: .test_template
   image: python:3.6
-  <<: *test_template
 
 test:37:
+  extends: .test_template
   image: python:3.7
-  <<: *test_template
 
 test:38:
+  extends: .test_template
   image: python:3.8
-  <<: *test_template
 
 test:39:
+  extends: .test_template
   image: python:3.9
-  <<: *test_template
+
+test:310:
+  extends: .test_template
+  image: python:3.10
+
+test:311:
+  extends: .test_template
+  image: python:3.11
+
+test:312:
+  extends: .test_template
+  image: python:3.12
 
 sonar:36:
-  <<: *sonar_template
+  extends: .sonar_template
   dependencies:
     - test:36
   variables:
     projectKey: supercell-36
 
 sonar:37:
-  <<: *sonar_template
+  extends: .sonar_template
   dependencies:
     - test:37
   variables:
     projectKey: supercell-37
 
 sonar:38:
-  <<: *sonar_template
+  extends: .sonar_template
   dependencies:
     - test:38
   variables:
     projectKey: supercell-38
 
 sonar:39:
-  <<: *sonar_template
+  extends: .sonar_template
   dependencies:
     - test:39
   variables:
     projectKey: supercell-39
+
+sonar:310:
+  extends: .sonar_template
+  dependencies:
+    - test:310
+  variables:
+    projectKey: supercell-310
+
+sonar:311:
+  extends: .sonar_template
+  dependencies:
+    - test:311
+  variables:
+    projectKey: supercell-311
+
+sonar:312:
+  extends: .sonar_template
+  dependencies:
+    - test:312
+  variables:
+    projectKey: supercell-312

@@ -1,4 +1,3 @@
-# vim: set fileencoding=utf-8 :
 #
 # Copyright (c) 2013 Daniel Truemper <truemped at googlemail.com>
 #
@@ -15,8 +14,7 @@
 # limitations under the License.
 #
 #
-from __future__ import (absolute_import, division, print_function,
-                        with_statement)
+
 from collections import namedtuple
 
 from tornado import gen
@@ -32,7 +30,7 @@ def ContentType(content_type, vendor=None, version=None):
     return ContentTypeT(content_type, vendor, version)
 
 
-class MediaType(object):
+class MediaType:
     """Collection of content types."""
 
     ApplicationJson = 'application/json'
@@ -65,19 +63,19 @@ class Ok(Return):
                                                  'be of type dict'
             v.update(additional)
 
-        super(Ok, self).__init__(ReturnInformation(code, message=v))
+        super().__init__(ReturnInformation(code, message=v))
 
 
 class OkCreated(Ok):
 
     def __init__(self, additional=None):
-        super(OkCreated, self).__init__(201, additional=additional)
+        super().__init__(201, additional=additional)
 
 
 class NoContent(Return):
 
     def __init__(self):
-        super(NoContent, self).__init__(ReturnInformation(204))
+        super().__init__(ReturnInformation(204))
 
 
 class Error(Return):
@@ -89,4 +87,4 @@ class Error(Return):
                                                  'be of type dict'
             v.update(additional)
 
-        super(Error, self).__init__(ReturnInformation(code, message=v))
+        super().__init__(ReturnInformation(code, message=v))

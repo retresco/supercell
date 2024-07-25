@@ -1,4 +1,3 @@
-# vim: set fileencoding=utf-8
 #
 # Taken from: https://gist.github.com/samuraisam/2714195
 #

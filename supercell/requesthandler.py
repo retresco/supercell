@@ -1,4 +1,3 @@
-# vim: set fileencoding=utf-8 :
 #
 # Copyright (c) 2013 Daniel Truemper <truemped at googlemail.com>
 #
@@ -15,8 +14,6 @@
 # limitations under the License.
 #
 #
-from __future__ import (absolute_import, division, print_function,
-                        with_statement)
 
 from datetime import datetime
 import json
@@ -34,7 +31,7 @@ from tornado.util import bytes_type, unicode_type
 from tornado.web import (RequestHandler as rq, HTTPError,
                          _has_stream_request_body)
 
-from supercell._compat import error_messages, text_type
+from supercell._compat import error_messages
 from supercell.cache import compute_cache_header
 from supercell.mediatypes import Error, MediaType, ReturnInformationT
 from supercell.consumer import ConsumerBase, NoConsumerFound
@@ -91,7 +88,7 @@ class RequestHandler(rq):
                 self.logger.info('A test')
         """
         if not hasattr(self, '_logger'):
-            name = '%s:%s' % (self.__class__.__name__, self.request_id)
+            name = '{}:{}'.format(self.__class__.__name__, self.request_id)
             self._logger = logging.getLogger(name)
         return self._logger
 
@@ -155,7 +152,7 @@ class RequestHandler(rq):
                 raise HTTPError(400, reason=json.dumps(
                     escape_contents(error_messages(e))))
             except Exception as e:
-                raise HTTPError(400, reason=text_type(escape_contents(e)))
+                raise HTTPError(400, reason=str(escape_contents(e)))
 
     def _add_cache_headers(self):
         """Maybe add cache headers on GET and HEAD requests."""
@@ -198,8 +195,8 @@ class RequestHandler(rq):
             if self.request.method not in self.SUPPORTED_METHODS:
                 raise HTTPError(405)
             self.path_args = [self.decode_argument(arg) for arg in args]
-            self.path_kwargs = dict((k, self.decode_argument(v, name=k))
-                                    for (k, v) in kwargs.items())
+            self.path_kwargs = {k: self.decode_argument(v, name=k)
+                                for (k, v) in kwargs.items()}
             # If XSRF cookies are turned on, reject form submissions without
             # the proper cookie
             if self.request.method not in ("GET", "HEAD", "OPTIONS") and \
@@ -287,7 +284,7 @@ class RequestHandler(rq):
         provider and use it's write_error message.
         """
         if not ProviderBase.has_provider(self):
-            super(RequestHandler, self).write_error(status_code, **kwargs)
+            super().write_error(status_code, **kwargs)
             return
 
         try:
@@ -297,7 +294,7 @@ class RequestHandler(rq):
             provider_class().error(status_code, self._reason, self)
         except NoProviderFound:
             self.set_status(406, reason="Can not produce acceptable response")
-            super(RequestHandler, self).write_error(406)
+            super().write_error(406)
 
     def load_model_from_arguments(self, model_cls, validate=True, **kwargs):
         """
@@ -342,4 +339,4 @@ class RequestHandler(rq):
         """
         if isinstance(e, Error):
             e = HTTPError(status_code=e.value.code, msg=e.value.message)
-        super(RequestHandler, self)._handle_request_exception(e)
+        super()._handle_request_exception(e)

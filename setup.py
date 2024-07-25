@@ -1,4 +1,3 @@
-# vim: set fileencoding=utf-8 :
 #
 # Copyright (c) 2012 Daniel Truemper <truemped at googlemail.com>
 #
@@ -15,14 +14,10 @@
 # limitations under the License.
 #
 #
-from imp import load_source
-import os
+
 from setuptools import setup
-import sys
 
-
-init = load_source('init', os.path.join('supercell', '__init__.py'))
-PY2 = sys.version_info[0] == 2
+from supercell.version import __version__
 
 
 tests_require = [
@@ -35,8 +30,6 @@ tests_require = [
 extras_require = {}
 extras_require['test'] = tests_require
 extras_require['futures'] = ''
-if PY2:
-    extras_require['futures'] = 'futures == 2.2.0'
 
 
 def readme():
@@ -46,7 +39,7 @@ def readme():
 
 setup(
     name='supercell',
-    version=init.__version__,
+    version=__version__,
 
     author='Daniel Truemper',
     author_email='truemped@gmail.com',
@@ -69,12 +62,12 @@ setup(
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: Implementation :: PyPy',
     ]
 )

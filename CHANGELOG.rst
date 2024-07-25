@@ -1,3 +1,29 @@
+Next version
+-------------------------
+
+New Features
+~~~~~~~~~~~~
+
+
+Development Changes
+~~~~~~~~~~~~~~~~~~~
+
+
+0.13.0 - (July 25, 2024)
+-------------------------
+
+New Features
+~~~~~~~~~~~~
+
+* support of Python 3.10 to 3.12
+
+
+Development Changes
+~~~~~~~~~~~~~~~~~~~
+
+* removal of left-over traces of support of Python version < 3.6.
+
+
 0.12.0 - (September 25, 2023)
 -------------------------
 
