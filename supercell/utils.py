@@ -1,4 +1,3 @@
-# vim: set fileencoding=utf-8 :
 #
 # Copyright (c) 2014 Daniel Truemper <truemped at googlemail.com>
 #
@@ -16,13 +15,7 @@
 #
 #
 
-try:
-    from html import escape
-except:
-    # for Python < 3.2
-    from cgi import escape
-
-from supercell._compat import string_types, text_type
+from html import escape
 
 
 __all__ = ['escape_contents']
@@ -33,14 +26,14 @@ def escape_contents(o):
     Encodes chars <, > and & as HTML entities.
     """
     _e = escape_contents
-    if isinstance(o, string_types):
-        return escape(text_type(o), quote=False)
+    if isinstance(o, str):
+        return escape(o, quote=False)
     elif isinstance(o, dict):
-        o = dict([(_e(k), _e(o[k])) for k in o])
+        o = {_e(k): _e(o[k]) for k in o}
     elif isinstance(o, list):
         o = [_e(v) for v in o]
     elif isinstance(o, tuple):
         o = tuple(_e(v) for v in o)
     elif isinstance(o, set):
-        o = set([_e(v) for v in o])
+        o = {_e(v) for v in o}
     return o

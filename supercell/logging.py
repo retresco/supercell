@@ -1,4 +1,3 @@
-# vim: set fileencoding=utf-8 :
 #
 # Copyright (c) 2013 Daniel Truemper <truemped at googlemail.com>
 #
@@ -15,8 +14,6 @@
 # limitations under the License.
 #
 #
-from __future__ import (absolute_import, division, print_function,
-                        with_statement)
 
 import logging
 from logging.handlers import TimedRotatingFileHandler
@@ -41,5 +38,5 @@ class HostnameFormatter(logging.Formatter):
     """
     def format(self, record):
         record.hostname = socket.gethostname()
-        record = super(HostnameFormatter, self).format(record)
+        record = super().format(record)
         return record

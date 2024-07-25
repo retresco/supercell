@@ -1,4 +1,3 @@
-# vim: set fileencoding=utf-8 :
 #
 # Copyright (c) 2013 Daniel Truemper <truemped at googlemail.com>
 #
@@ -15,8 +14,6 @@
 # limitations under the License.
 #
 #
-from __future__ import (absolute_import, division, print_function,
-                        with_statement)
 
 from tornado.gen import coroutine
 

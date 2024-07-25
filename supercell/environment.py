@@ -1,4 +1,3 @@
-# vim: set fileencoding=utf-8 :
 #
 # Copyright (c) 2013 Daniel Truemper <truemped at googlemail.com>
 #
@@ -15,6 +14,7 @@
 # limitations under the License.
 #
 #
+
 """The :class:`Environment` is a container for request handlers, managed
 objects and other runtime settings as well as the
 :class:`tornado.web.Application` settings.
@@ -26,8 +26,6 @@ can also use it from within a request handler in and access managed objects,
 such as HTTP clients that can be used accross a number of client libraries for
 connection pooling, e.g.
 """
-from __future__ import (absolute_import, division, print_function,
-                        with_statement)
 
 from collections import namedtuple
 from datetime import timedelta
@@ -54,7 +52,7 @@ class Application(_TAPP):
         """
         self.environment = environment
         self.config = config
-        super(Application, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def log_request(self, handler):
         """
@@ -66,10 +64,10 @@ class Application(_TAPP):
                 isinstance(handler, SystemHealthCheck) and \
                 handler.get_status() < 400:
             return
-        super(Application, self).log_request(handler)
+        super().log_request(handler)
 
 
-class Environment(object):
+class Environment:
     """Environment for **supercell** processes.
     """
 
@@ -274,6 +272,6 @@ class Environment(object):
         if not hasattr(self, '_config_name'):
             import getpass
             import socket
-            self._config_name = '%s_%s.cfg' % (getpass.getuser(),
-                                               socket.gethostname())
+            self._config_name = '{}_{}.cfg'.format(getpass.getuser(),
+                                                   socket.gethostname())
         return self._config_name
