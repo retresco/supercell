@@ -71,6 +71,10 @@ test:312:
   extends: .test_template
   image: python:3.12
 
+test:313:
+  extends: .test_template
+  image: python:3.13
+
 sonar:36:
   extends: .sonar_template
   dependencies:
@@ -119,3 +123,10 @@ sonar:312:
     - test:312
   variables:
     projectKey: supercell-312
+
+sonar:313:
+  extends: .sonar_template
+  dependencies:
+    - test:313
+  variables:
+    projectKey: supercell-313
