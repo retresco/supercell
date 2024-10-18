@@ -4,6 +4,8 @@ Next version
 New Features
 ~~~~~~~~~~~~
 
+* support of Python 3.13
+
 
 Development Changes
 ~~~~~~~~~~~~~~~~~~~
