@@ -4,9 +4,17 @@ Next version
 New Features
 ~~~~~~~~~~~~
 
-
 Development Changes
 ~~~~~~~~~~~~~~~~~~~
+
+
+0.14.0 (October 18, 2024)
+-------------------------
+
+New Features
+~~~~~~~~~~~~
+
+* support of Python 3.13
 
 
 0.13.0 - (July 25, 2024)
